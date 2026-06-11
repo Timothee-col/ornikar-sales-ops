@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WCB — Analyse par page · Ornikar</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --surface: #ffffff;
+    --border: #e4e2dc;
+    --text: #1a1916;
+    --muted: #6b6960;
+    --hint: #a8a69f;
+    --blue: #2563eb;
+    --green: #16a34a;
+    --amber: #d97706;
+    --red: #dc2626;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 20px 32px; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  header .left { display: flex; align-items: baseline; gap: 16px; }
+  header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+  header span { font-size: 12px; color: var(--muted); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; }
+
+  .uploader { background: var(--surface); border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 28px; text-align: center; transition: all .15s; cursor: pointer; }
+  .uploader:hover, .uploader.drag { border-color: var(--blue); background: #f0f6ff; }
+  .uploader .title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .uploader .sub { font-size: 12px; color: var(--muted); }
+  .uploader code { background: #eee; padding: 1px 6px; border-radius: 3px; font-size: 11px; }
+  .uploader input[type=file] { display: none; }
+  .btn { display: inline-block; font-size: 12px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); cursor: pointer; transition: all .15s; }
+  .btn:hover { border-color: var(--blue); color: var(--blue); }
+
+  .error { background: #fee2e2; color: #991b1b; padding: 12px 16px; border-radius: var(--radius); font-size: 13px; }
+  .hidden-section { display: none; }
+
+  .loading { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; }
+  .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+  .kpi-value { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
+  .kpi-sub { font-size: 11px; color: var(--hint); margin-top: 3px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; }
+  .card-title { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tab { font-size: 12px; padding: 4px 12px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; background: transparent; color: var(--muted); transition: all .15s; }
+  .tab:hover { border-color: #aaa; color: var(--text); }
+  .tab.on { background: var(--text); color: #fff; border-color: var(--text); }
+
+  .chart-wrap { position: relative; width: 100%; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; padding: 6px 10px; text-align: right; border-bottom: 1px solid var(--border); }
+  thead th:first-child { text-align: left; }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--bg); }
+  tbody td { padding: 8px 10px; text-align: right; color: var(--text); }
+  tbody td:first-child { text-align: left; color: var(--muted); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; }
+  .g { background: #dcfce7; color: #15803d; }
+  .m { background: #fef9c3; color: #a16207; }
+  .r { background: #fee2e2; color: #b91c1c; }
+
+  .bar-inline { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+  .mini-bar { height: 5px; border-radius: 3px; min-width: 2px; }
+
+  .note { font-size: 11px; color: var(--hint); margin-top: 8px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); cursor: pointer; user-select: none; }
+  .legend-item.hidden { opacity: .35; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  details.schema { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; font-size: 12px; color: var(--muted); }
+  details.schema summary { cursor: pointer; font-weight: 500; color: var(--text); }
+  details.schema ul { margin: 8px 0 0 18px; }
+  details.schema code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+
+  @media (max-width: 768px) {
+    .container { padding: 16px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="left">
+    <h1>Web Callback — Analyse par page</h1>
+    <span id="dataLabel">chargement…</span>
+  </div>
+  <div>
+    <button class="btn" id="resetBtn" style="display:none">Charger un autre CSV</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <div id="uploader" class="uploader" style="display:none">
+    <input type="file" id="fileInput" accept=".csv,text/csv">
+    <div class="title">Glisse ton CSV ici · ou clique pour en sélectionner un</div>
+    <div class="sub">Tu peux aussi déposer un fichier <code>data.csv</code> à la racine du repo — il sera chargé automatiquement</div>
+  </div>
+
+  <div id="loading" class="loading">Chargement de <code>data.csv</code>…</div>
+
+  <details class="schema" id="schemaInfo" style="display:none">
+    <summary>Colonnes détectées dans le CSV</summary>
+    <ul id="schemaList"></ul>
+  </details>
+
+  <div id="errBox" class="error" style="display:none"></div>
+
+  <div id="dashboard" class="hidden-section">
+
+    <div class="kpi-row" style="margin-bottom:24px">
+      <div class="kpi"><div class="kpi-label">WCB bruts</div><div class="kpi-value" id="kpi-raw">—</div><div class="kpi-sub">toutes lignes</div></div>
+      <div class="kpi"><div class="kpi-label">Clients uniques planifiés</div><div class="kpi-value" id="kpi-planned">—</div><div class="kpi-sub">learner_id distinct</div></div>
+      <div class="kpi"><div class="kpi-label">Call rate</div><div class="kpi-value" id="kpi-call">—</div><div class="kpi-sub" id="kpi-call-sub">—</div></div>
+      <div class="kpi"><div class="kpi-label">Reach rate</div><div class="kpi-value" id="kpi-reach">—</div><div class="kpi-sub" id="kpi-reach-sub">—</div></div>
+      <div class="kpi"><div class="kpi-label">Conv. / reached</div><div class="kpi-value" id="kpi-conv">—</div><div class="kpi-sub" id="kpi-conv-sub">—</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-title">Volume WCB par semaine · par page</div>
+      <div id="volLegend" class="legend"></div>
+      <div class="tabs" id="volTabs">
+        <button class="tab on" data-mode="stacked">Empilé</button>
+        <button class="tab" data-mode="line">Courbes</button>
+        <button class="tab" data-mode="100pct">100%</button>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="volChart"></canvas></div>
+      <p class="note">Lignes brutes — un learner avec plusieurs WCB est compté plusieurs fois</p>
+    </div>
+
+    <div class="two-col" style="margin-bottom:24px">
+      <div class="card">
+        <div class="card-title">Taux de conversion par page</div>
+        <div class="tabs" id="convTabs">
+          <button class="tab on" data-metric="conv_reached">Conv / reached</button>
+          <button class="tab" data-metric="conv_planned">Conv / planifié</button>
+          <button class="tab" data-metric="reach_rate">Reach rate</button>
+          <button class="tab" data-metric="call_rate">Call rate</button>
+        </div>
+        <div class="chart-wrap" style="height:320px"><canvas id="convChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Évolution hebdomadaire</div>
+        <div class="tabs" id="trendTabs">
+          <button class="tab on" data-trend="rates">Taux (%)</button>
+          <button class="tab" data-trend="volume">Volume clients</button>
+        </div>
+        <div class="chart-wrap" style="height:320px"><canvas id="trendChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:24px">
+      <div class="card">
+        <div class="card-title">Volume mensuel par page</div>
+        <div class="chart-wrap" style="height:260px"><canvas id="monthChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Distribution WCB par learner</div>
+        <div class="chart-wrap" style="height:220px"><canvas id="distChart"></canvas></div>
+        <p class="note" id="distNote"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tableau détaillé par page — client unique</div>
+      <div class="tabs" id="sortTabs">
+        <button class="tab on" data-sort="planned_u">Volume</button>
+        <button class="tab" data-sort="call_rate">Call rate</button>
+        <button class="tab" data-sort="reach_rate">Reach rate</button>
+        <button class="tab" data-sort="conv_planned">Conv/planifié</button>
+        <button class="tab" data-sort="conv_reached">Conv/reached</button>
+        <button class="tab" data-sort="purchases_u">Achats</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Page</th><th>Planifiés</th><th>Callés</th><th>Call rate</th>
+            <th>Reached</th><th>Reach rate</th><th>Conv/planifié</th><th>Conv/reached</th><th>Achats</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CSV PARSING & NORMALIZATION
+// ============================================================
+const COLUMN_ALIASES = {
+  learner_id: ['learner_id','user_id','customer_id','client_id','id_learner','learnerid'],
+  scheduled_at: ['call_scheduled_date','scheduled_at','planned_at','created_at','date','wcb_date','scheduled_date','planned_date'],
+  page: ['planned_call_page_location','page','page_group','source_page','url_path','url','source','referrer_path'],
+  called: ['call_id','call_date','called','is_called','was_called','call_done'],
+  reached: ['has_call_reached','reached','is_reached','answered','call_reached','is_answered'],
+  purchased: ['purchase_date','call_assisted_purchase_id','purchased','is_purchase','is_purchased','converted','purchase','is_last_call_assisting_purchase','is_first_call_assisting_purchase']
+};
+
+const FRIENDLY_LABELS = {
+  learner_id: 'learner_id',
+  scheduled_at: 'date planifiée',
+  page: 'page',
+  called: 'callé',
+  reached: 'reached',
+  purchased: 'achat'
+};
+
+function normHeader(h) { return String(h||'').toLowerCase().trim().replace(/[\s\-]/g,'_'); }
+
+function findCol(headers, aliases) {
+  const lc = headers.map(normHeader);
+  for (const a of aliases) {
+    const idx = lc.indexOf(a);
+    if (idx >= 0) return headers[idx];
+  }
+  return null;
+}
+
+// Treats empty/null/false/0 as absent; any non-empty value (true, "true", date, id) as present
+function isPresent(v) {
+  if (v === null || v === undefined || v === false || v === 0) return false;
+  const s = String(v).trim().toLowerCase();
+  if (s === '' || s === 'null' || s === 'na' || s === 'n/a' || s === 'false' || s === '0' || s === 'no') return false;
+  return true;
+}
+
+function isoWeek(d) {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
+  const weekNum = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+  return date.getUTCFullYear() + '-W' + String(weekNum).padStart(2,'0');
+}
+function isoMonth(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'); }
+
+function normalizePageGroup(raw) {
+  if (!raw) return 'unknown';
+  let s = String(raw).trim();
+  if (!s) return 'unknown';
+  s = s.replace(/^https?:\/\/[^\/]+/,'');
+  s = s.replace(/^\//,'').split('?')[0].split('#')[0];
+  if (!s) return 'shop';
+  if (s.length > 70) s = s.slice(0,70);
+  return s.toLowerCase();
+}
+
+function parseCSV(text) {
+  const res = Papa.parse(text, { header: true, skipEmptyLines: true, dynamicTyping: false });
+  if (!res.data.length) throw new Error('CSV vide');
+  const headers = res.meta.fields || [];
+  const cols = {};
+  for (const k of Object.keys(COLUMN_ALIASES)) {
+    cols[k] = findCol(headers, COLUMN_ALIASES[k]);
+  }
+  if (!cols.learner_id) throw new Error('Colonne learner_id introuvable. Aliases: ' + COLUMN_ALIASES.learner_id.join(', '));
+  if (!cols.scheduled_at) throw new Error('Colonne date planifiée introuvable. Aliases: ' + COLUMN_ALIASES.scheduled_at.join(', '));
+
+  const rows = res.data.map(r => {
+    const dRaw = r[cols.scheduled_at];
+    const d = dRaw ? new Date(dRaw) : null;
+    const valid = d && !isNaN(d.getTime());
+    return {
+      learner_id: r[cols.learner_id],
+      week: valid ? isoWeek(d) : null,
+      month: valid ? isoMonth(d) : null,
+      page: normalizePageGroup(cols.page ? r[cols.page] : ''),
+      called: cols.called ? isPresent(r[cols.called]) : false,
+      reached: cols.reached ? isPresent(r[cols.reached]) : false,
+      purchased: cols.purchased ? isPresent(r[cols.purchased]) : false,
+    };
+  }).filter(r => r.learner_id);
+  return { rows, cols, headers };
+}
+
+// ============================================================
+// AGGREGATION
+// ============================================================
+function aggregate(parsed) {
+  const rows = parsed.rows;
+  // Group: keep top 12 pages by volume, rest → "autres"
+  const counts = {};
+  for (const r of rows) counts[r.page] = (counts[r.page]||0)+1;
+  const sortedPages = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const topSet = new Set(sortedPages.slice(0,12).map(x=>x[0]));
+  rows.forEach(r => r.pageGroup = topSet.has(r.page) ? r.page : 'autres');
+
+  let allPages = [...new Set(rows.map(r=>r.pageGroup))];
+  const volByPage = {};
+  rows.forEach(r => volByPage[r.pageGroup] = (volByPage[r.pageGroup]||0)+1);
+  allPages.sort((a,b)=>(volByPage[b]||0)-(volByPage[a]||0));
+
+  // weekly volume × page
+  const weekSet = [...new Set(rows.filter(r=>r.week).map(r=>r.week))].sort();
+  const weekly_vol = weekSet.map(w => { const o={week:w}; allPages.forEach(p=>o[p]=0); return o; });
+  const weekIdx = Object.fromEntries(weekSet.map((w,i)=>[w,i]));
+  rows.forEach(r => { if(r.week!=null) weekly_vol[weekIdx[r.week]][r.pageGroup]++; });
+
+  // monthly volume × page
+  const monthSet = [...new Set(rows.filter(r=>r.month).map(r=>r.month))].sort();
+  const monthly_vol = monthSet.map(m => { const o={month:m}; allPages.forEach(p=>o[p]=0); return o; });
+  const monthIdx = Object.fromEntries(monthSet.map((m,i)=>[m,i]));
+  rows.forEach(r => { if(r.month!=null) monthly_vol[monthIdx[r.month]][r.pageGroup]++; });
+
+  // page_conv (unique clients per page)
+  const byPage = {};
+  allPages.forEach(p => byPage[p] = { planned:new Set(), called:new Set(), reached:new Set(), purchased:new Set() });
+  rows.forEach(r => {
+    const b = byPage[r.pageGroup];
+    b.planned.add(r.learner_id);
+    if (r.called) b.called.add(r.learner_id);
+    if (r.reached) b.reached.add(r.learner_id);
+    if (r.purchased) b.purchased.add(r.learner_id);
+  });
+  const page_conv = allPages.map(p => {
+    const b = byPage[p];
+    const planned=b.planned.size, called=b.called.size, reached=b.reached.size, purchases=b.purchased.size;
+    return {
+      page_group: p, planned_u:planned, called_u:called, reached_u:reached, purchases_u:purchases,
+      call_rate: planned ? +(called/planned*100).toFixed(1) : 0,
+      reach_rate: called ? +(reached/called*100).toFixed(1) : 0,
+      conv_planned: planned ? +(purchases/planned*100).toFixed(1) : 0,
+      conv_reached: reached ? +(purchases/reached*100).toFixed(1) : 0
+    };
+  });
+
+  // weekly_conv (unique clients per week, all pages)
+  const byWeek = {};
+  weekSet.forEach(w => byWeek[w] = { planned:new Set(), called:new Set(), reached:new Set(), purchased:new Set() });
+  rows.forEach(r => {
+    if (!r.week) return;
+    const b = byWeek[r.week];
+    b.planned.add(r.learner_id);
+    if (r.called) b.called.add(r.learner_id);
+    if (r.reached) b.reached.add(r.learner_id);
+    if (r.purchased) b.purchased.add(r.learner_id);
+  });
+  const weekly_conv = weekSet.map(w => {
+    const b = byWeek[w];
+    const planned=b.planned.size, called=b.called.size, reached=b.reached.size, purchases=b.purchased.size;
+    return {
+      week: w, planned_u:planned, called_u:called, reached_u:reached, purchases_u:purchases,
+      call_rate: planned ? +(called/planned*100).toFixed(1) : 0,
+      reach_rate: called ? +(reached/called*100).toFixed(1) : 0,
+      conv_planned: planned ? +(purchases/planned*100).toFixed(1) : 0,
+      conv_reached: reached ? +(purchases/reached*100).toFixed(1) : 0
+    };
+  });
+
+  // wcb_dist
+  const wcbCount = {};
+  rows.forEach(r => wcbCount[r.learner_id] = (wcbCount[r.learner_id]||0)+1);
+  const distMap = {};
+  Object.values(wcbCount).forEach(n => { const k = n>=10?10:n; distMap[k]=(distMap[k]||0)+1; });
+  const wcb_dist = [];
+  for (let i=1; i<=10; i++) wcb_dist.push({ n_wcb: i, count: distMap[i]||0 });
+  const multiCount = Object.values(wcbCount).filter(n=>n>1).length;
+
+  // totals
+  const allLearners = new Set(rows.map(r=>r.learner_id));
+  const totals = {
+    raw: rows.length,
+    planned: allLearners.size,
+    called: new Set(rows.filter(r=>r.called).map(r=>r.learner_id)).size,
+    reached: new Set(rows.filter(r=>r.reached).map(r=>r.learner_id)).size,
+    purchased: new Set(rows.filter(r=>r.purchased).map(r=>r.learner_id)).size
+  };
+
+  return { weekly_vol, monthly_vol, page_conv, weekly_conv, wcb_dist, pages: allPages, totals, multiCount };
+}
+
+// ============================================================
+// COLORS
+// ============================================================
+const PALETTE = ['#2563eb','#7c3aed','#059669','#ea580c','#db2777','#0891b2','#b45309','#65a30d','#047857','#d97706','#3f6212','#dc2626'];
+const FIXED = {
+  'shop':'#2563eb', 'unknown':'#94a3b8', 'autres':'#9ca3af',
+  'product/pack-permis-complet':'#7c3aed',
+  'product/pack-permis-complet-sans-code':'#059669',
+  'product/pack-permis-complet-sans-code-lead':'#047857',
+  'product/pack-permis-complet-revolut':'#ea580c',
+  'product/pack-permis-complet-boite-automatique':'#b45309',
+  'product/pack-permis-complet-boite-automatique-sans-code':'#65a30d',
+  'product/pack-permis-complet-boite-automatique-sans-code-lead':'#3f6212',
+  'emailcrm':'#db2777', 'product/pack-5h':'#d97706', 'product/pack-10h':'#0891b2'
+};
+const COLOR_CACHE = {};
+function hashStr(s) { let h=0; for(let i=0;i<s.length;i++){h=((h<<5)-h+s.charCodeAt(i))|0;} return Math.abs(h); }
+function pageColor(p) {
+  if (FIXED[p]) return FIXED[p];
+  if (!COLOR_CACHE[p]) COLOR_CACHE[p] = PALETTE[hashStr(p) % PALETTE.length];
+  return COLOR_CACHE[p];
+}
+function hex2rgba(hex, a) {
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+function shortLabel(s) {
+  return s
+    .replace('product/pack-permis-complet-boite-automatique-sans-code-lead','auto/sans-code-lead')
+    .replace('product/pack-permis-complet-boite-automatique-sans-code','auto/sans-code')
+    .replace('product/pack-permis-complet-boite-automatique','auto/ppc')
+    .replace('product/pack-permis-complet-sans-code-lead','ppc/sans-code-lead')
+    .replace('product/pack-permis-complet-sans-code','ppc/sans-code')
+    .replace('product/pack-permis-complet-revolut','ppc/revolut')
+    .replace('product/pack-permis-complet','ppc')
+    .replace('product/pack-','pack-')
+    .replace('checkout/','↓ ');
+}
+
+// ============================================================
+// RENDERING
+// ============================================================
+let STATE = null;
+let hiddenPages = new Set();
+let volMode = 'stacked', convMetric = 'conv_reached', trendMode = 'rates', sortKey = 'planned_u';
+let charts = {};
+
+function fmt(n) { return Number(n).toLocaleString('fr'); }
+function pct(n) { return n.toFixed(1) + '%'; }
+
+function renderKPIs() {
+  const t = STATE.totals;
+  document.getElementById('kpi-raw').textContent = fmt(t.raw);
+  document.getElementById('kpi-planned').textContent = fmt(t.planned);
+  document.getElementById('kpi-call').textContent = t.planned ? pct(t.called/t.planned*100) : '—';
+  document.getElementById('kpi-call-sub').textContent = fmt(t.called) + ' clients callés';
+  document.getElementById('kpi-reach').textContent = t.called ? pct(t.reached/t.called*100) : '—';
+  document.getElementById('kpi-reach-sub').textContent = fmt(t.reached) + ' clients reached';
+  document.getElementById('kpi-conv').textContent = t.reached ? pct(t.purchased/t.reached*100) : '—';
+  document.getElementById('kpi-conv-sub').textContent = fmt(t.purchased) + ' achats';
+}
+
+function renderLegend() {
+  const el = document.getElementById('volLegend');
+  el.innerHTML = STATE.pages.map(p => `
+    <div class="legend-item ${hiddenPages.has(p)?'hidden':''}" data-page="${p}" title="${p}">
+      <div class="legend-dot" style="background:${pageColor(p)}"></div>
+      <span>${shortLabel(p)}</span>
+    </div>`).join('');
+  el.querySelectorAll('.legend-item').forEach(it => {
+    it.addEventListener('click', () => {
+      const p = it.dataset.page;
+      hiddenPages.has(p) ? hiddenPages.delete(p) : hiddenPages.add(p);
+      renderLegend();
+      renderVolChart();
+    });
+  });
+}
+
+function renderVolChart() {
+  if (charts.vol) charts.vol.destroy();
+  const ctx = document.getElementById('volChart').getContext('2d');
+  const weeks = STATE.weekly_vol.map(r => r.week);
+  const pages = STATE.pages.filter(p => !hiddenPages.has(p));
+  let datasets = pages.map(p => ({
+    label: shortLabel(p), _page: p,
+    data: STATE.weekly_vol.map(r => r[p]||0),
+    backgroundColor: volMode==='line' ? 'transparent' : hex2rgba(pageColor(p), 0.82),
+    borderColor: pageColor(p),
+    borderWidth: volMode==='line' ? 2 : 0,
+    fill: false, tension: 0.3, pointRadius: 0
+  }));
+  let yCb = v => v;
+  if (volMode === '100pct') {
+    const totals = STATE.weekly_vol.map(r => pages.reduce((s,p)=>s+(r[p]||0),0));
+    datasets.forEach(ds => {
+      ds.data = STATE.weekly_vol.map((r,i) => totals[i]>0 ? +((r[ds._page]||0)/totals[i]*100).toFixed(1) : 0);
+    });
+    yCb = v => v+'%';
+  }
+  charts.vol = new Chart(ctx, {
+    type: volMode==='line' ? 'line' : 'bar',
+    data: { labels: weeks, datasets },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{mode:'index',intersect:false} },
+      scales:{
+        x:{ stacked: volMode!=='line', ticks:{color:'#9ca3af',font:{size:10},maxRotation:45}, grid:{display:false} },
+        y:{ stacked: volMode!=='line', ticks:{color:'#9ca3af',font:{size:10},callback:yCb}, grid:{color:'rgba(0,0,0,0.05)'} }
+      }
+    }
+  });
+}
+
+function renderConvChart() {
+  if (charts.conv) charts.conv.destroy();
+  const ctx = document.getElementById('convChart').getContext('2d');
+  const sorted = [...STATE.page_conv].sort((a,b)=>b[convMetric]-a[convMetric]);
+  charts.conv = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: sorted.map(p => shortLabel(p.page_group)),
+      datasets: [{
+        data: sorted.map(p => p[convMetric]),
+        backgroundColor: sorted.map(p => hex2rgba(pageColor(p.page_group),0.82)),
+        borderColor: sorted.map(p => pageColor(p.page_group)),
+        borderWidth: 1, borderRadius: 3
+      }]
+    },
+    options: {
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#9ca3af',font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.05)'}},
+        y:{ticks:{color:'#6b7280',font:{size:11}},grid:{display:false}}
+      }
+    }
+  });
+}
+
+function renderTrendChart() {
+  if (charts.trend) charts.trend.destroy();
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  const labels = STATE.weekly_conv.map(w=>w.week);
+  let datasets;
+  if (trendMode === 'rates') {
+    datasets = [
+      {label:'Call rate',data:STATE.weekly_conv.map(w=>w.call_rate),borderColor:'#2563eb',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3},
+      {label:'Reach rate',data:STATE.weekly_conv.map(w=>w.reach_rate),borderColor:'#16a34a',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3},
+      {label:'Conv/reached',data:STATE.weekly_conv.map(w=>w.conv_reached),borderColor:'#dc2626',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3}
+    ];
+  } else {
+    datasets = [
+      {label:'Planifiés',data:STATE.weekly_conv.map(w=>w.planned_u),backgroundColor:hex2rgba('#2563eb',0.6),borderColor:'#2563eb',borderWidth:1,borderRadius:2},
+      {label:'Reached',data:STATE.weekly_conv.map(w=>w.reached_u),backgroundColor:hex2rgba('#16a34a',0.6),borderColor:'#16a34a',borderWidth:1,borderRadius:2},
+      {label:'Achats',data:STATE.weekly_conv.map(w=>w.purchases_u),backgroundColor:hex2rgba('#dc2626',0.6),borderColor:'#dc2626',borderWidth:1,borderRadius:2}
+    ];
+  }
+  charts.trend = new Chart(ctx, {
+    type: trendMode==='rates' ? 'line' : 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:11},color:'#6b7280',padding:12}},tooltip:{mode:'index',intersect:false}},
+      scales:{
+        x:{ticks:{color:'#9ca3af',font:{size:9},maxRotation:45},grid:{display:false}},
+        y:{ticks:{color:'#9ca3af',font:{size:10},callback:v=>trendMode==='rates'?v+'%':v},grid:{color:'rgba(0,0,0,0.05)'}}
+      }
+    }
+  });
+}
+
+function renderMonthChart() {
+  if (charts.month) charts.month.destroy();
+  const ctx = document.getElementById('monthChart').getContext('2d');
+  charts.month = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: STATE.monthly_vol.map(r=>r.month),
+      datasets: STATE.pages.map(p => ({
+        label: shortLabel(p),
+        data: STATE.monthly_vol.map(r => r[p]||0),
+        backgroundColor: hex2rgba(pageColor(p),0.82),
+        borderColor: pageColor(p), borderWidth: 0, borderRadius: 2
+      }))
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+      scales:{
+        x:{stacked:true, ticks:{color:'#9ca3af',font:{size:11}},grid:{display:false}},
+        y:{stacked:true, ticks:{color:'#9ca3af',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}
+      }
+    }
+  });
+}
+
+function renderDistChart() {
+  if (charts.dist) charts.dist.destroy();
+  const ctx = document.getElementById('distChart').getContext('2d');
+  charts.dist = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: STATE.wcb_dist.map(d => d.n_wcb===10?'10+':d.n_wcb+'x'),
+      datasets:[{
+        data: STATE.wcb_dist.map(d=>d.count),
+        backgroundColor: STATE.wcb_dist.map((_,i)=> i===0?hex2rgba('#2563eb',0.7):hex2rgba('#ea580c',0.65)),
+        borderColor: STATE.wcb_dist.map((_,i)=> i===0?'#2563eb':'#ea580c'),
+        borderWidth: 1, borderRadius: 3
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#9ca3af',font:{size:11}},grid:{display:false}},
+        y:{ticks:{color:'#9ca3af',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}
+      }
+    }
+  });
+  document.getElementById('distNote').textContent = fmt(STATE.multiCount) + ' learners avec >1 WCB';
+}
+
+function bc(v){return v>=25?'g':v>=17?'m':'r';}
+function br(v){return v>=82?'g':v>=75?'m':'r';}
+
+function renderTable() {
+  const sorted = [...STATE.page_conv].sort((a,b)=>b[sortKey]-a[sortKey]);
+  const maxV = sorted[0] ? sorted[0].planned_u : 1;
+  document.getElementById('tableBody').innerHTML = sorted.map(p => `
+    <tr>
+      <td title="${p.page_group}" style="color:${pageColor(p.page_group)};font-weight:500">${shortLabel(p.page_group)}</td>
+      <td class="num"><div class="bar-inline"><div class="mini-bar" style="width:${Math.round(p.planned_u/maxV*70)}px;background:${hex2rgba(pageColor(p.page_group),0.3)}"></div>${fmt(p.planned_u)}</div></td>
+      <td class="num">${fmt(p.called_u)}</td>
+      <td><span class="badge ${br(p.call_rate)}">${p.call_rate}%</span></td>
+      <td class="num">${fmt(p.reached_u)}</td>
+      <td><span class="badge ${br(p.reach_rate)}">${p.reach_rate}%</span></td>
+      <td><span class="badge ${bc(p.conv_planned)}">${p.conv_planned}%</span></td>
+      <td><span class="badge ${bc(p.conv_reached)}">${p.conv_reached}%</span></td>
+      <td class="num">${fmt(p.purchases_u)}</td>
+    </tr>`).join('');
+}
+
+function renderSchema(cols) {
+  const el = document.getElementById('schemaList');
+  el.innerHTML = Object.keys(COLUMN_ALIASES).map(k => {
+    const found = cols[k];
+    return `<li>${FRIENDLY_LABELS[k]} → ${found ? `<code>${found}</code>` : '<span style="color:#dc2626">non trouvé</span>'}</li>`;
+  }).join('');
+  document.getElementById('schemaInfo').style.display = 'block';
+}
+
+function renderAll() {
+  renderKPIs();
+  renderLegend();
+  renderVolChart();
+  renderConvChart();
+  renderTrendChart();
+  renderMonthChart();
+  renderDistChart();
+  renderTable();
+}
+
+function bindTabs(containerId, attr, cb) {
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.tab').forEach(b => {
+    b.addEventListener('click', () => {
+      container.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      cb(b.dataset[attr]);
+    });
+  });
+}
+bindTabs('volTabs','mode',v=>{ volMode=v; renderVolChart(); });
+bindTabs('convTabs','metric',v=>{ convMetric=v; renderConvChart(); });
+bindTabs('trendTabs','trend',v=>{ trendMode=v; renderTrendChart(); });
+bindTabs('sortTabs','sort',v=>{ sortKey=v; renderTable(); });
+
+// ============================================================
+// UPLOAD / FILE HANDLING
+// ============================================================
+const uploader = document.getElementById('uploader');
+const fileInput = document.getElementById('fileInput');
+const errBox = document.getElementById('errBox');
+const dashboard = document.getElementById('dashboard');
+const dataLabel = document.getElementById('dataLabel');
+const resetBtn = document.getElementById('resetBtn');
+const loadingEl = document.getElementById('loading');
+
+function showError(msg) { errBox.style.display = 'block'; errBox.textContent = msg; }
+function clearError() { errBox.style.display = 'none'; }
+
+function loadCsvText(text, sourceLabel) {
+  try {
+    clearError();
+    loadingEl.style.display = 'none';
+    const parsed = parseCSV(text);
+    if (!parsed.rows.length) throw new Error('Aucune ligne exploitable');
+    STATE = aggregate(parsed);
+    if (!STATE.pages.length) throw new Error('Aucune page détectée');
+    hiddenPages = new Set();
+    renderSchema(parsed.cols);
+    dashboard.classList.remove('hidden-section');
+    uploader.style.display = 'none';
+    resetBtn.style.display = 'inline-block';
+    dataLabel.textContent = sourceLabel + ' · ' + fmt(parsed.rows.length) + ' lignes';
+    renderAll();
+  } catch (e) {
+    loadingEl.style.display = 'none';
+    uploader.style.display = 'block';
+    dataLabel.textContent = 'aucune donnée chargée';
+    showError('Erreur: ' + e.message);
+    console.error(e);
+  }
+}
+
+function handleFile(file) {
+  loadingEl.style.display = 'block';
+  loadingEl.textContent = 'Lecture de ' + file.name + '…';
+  const reader = new FileReader();
+  reader.onload = e => loadCsvText(e.target.result, file.name);
+  reader.onerror = () => { loadingEl.style.display = 'none'; showError('Impossible de lire le fichier'); };
+  reader.readAsText(file);
+}
+
+uploader.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+['dragenter','dragover'].forEach(ev => uploader.addEventListener(ev, e => { e.preventDefault(); uploader.classList.add('drag'); }));
+['dragleave','drop'].forEach(ev => uploader.addEventListener(ev, e => { e.preventDefault(); uploader.classList.remove('drag'); }));
+uploader.addEventListener('drop', e => { if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+resetBtn.addEventListener('click', () => {
+  dashboard.classList.add('hidden-section');
+  uploader.style.display = 'block';
+  resetBtn.style.display = 'none';
+  document.getElementById('schemaInfo').style.display = 'none';
+  dataLabel.textContent = 'aucune donnée chargée';
+  fileInput.value = '';
+  clearError();
+});
+
+// Auto-load data.csv on page load
+(async () => {
+  try {
+    const res = await fetch('data.csv', { cache: 'no-store' });
+    if (!res.ok) throw new Error('not found');
+    loadingEl.textContent = 'Parsing data.csv…';
+    const text = await res.text();
+    loadCsvText(text, 'data.csv');
+  } catch (e) {
+    loadingEl.style.display = 'none';
+    uploader.style.display = 'block';
+    dataLabel.textContent = 'aucune donnée chargée';
+  }
+})();
+</script>
+</body>
+</html>
