@@ -155,6 +155,7 @@
         <button class="tab on" data-mode="stacked">Empilé</button>
         <button class="tab" data-mode="line">Courbes</button>
         <button class="tab" data-mode="indexed">Indexé (base 100)</button>
+        <button class="tab" data-mode="line-sqrt">Courbes (√)</button>
         <button class="tab" data-mode="100pct">100%</button>
       </div>
       <div class="chart-wrap" style="height:600px"><canvas id="volChart"></canvas></div>
@@ -499,8 +500,9 @@ function renderVolChart() {
   const ctx = document.getElementById('volChart').getContext('2d');
   const weeks = STATE.weekly_vol.map(r => r.week);
   const pages = STATE.pages.filter(p => !hiddenPages.has(p));
-  const isLine = volMode === 'line' || volMode === 'indexed';
+  const isLine = volMode === 'line' || volMode === 'indexed' || volMode === 'line-sqrt';
   const isIndexed = volMode === 'indexed';
+  const isSqrt = volMode === 'line-sqrt';
   const isStacked = volMode === 'stacked' || volMode === '100pct';
   let datasets = pages.map(p => ({
     label: shortLabel(p), _page: p,
@@ -527,6 +529,13 @@ function renderVolChart() {
     });
     yCb = v => v + '%';
   }
+  if (isSqrt) {
+    datasets.forEach(ds => {
+      ds._original = ds.data.slice();
+      ds.data = ds.data.map(v => v >= 0 ? Math.sqrt(v) : 0);
+    });
+    yCb = v => Math.round(v*v);
+  }
   charts.vol = new Chart(ctx, {
     type: isLine ? 'line' : 'bar',
     data: { labels: weeks, datasets },
@@ -536,7 +545,9 @@ function renderVolChart() {
         legend:{display:false},
         tooltip:{
           mode:'index', intersect:false,
-          callbacks: isIndexed ? { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '% (' + ctx.dataset._original[ctx.dataIndex] + ')' } : {}
+          callbacks: isIndexed ? { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '% (' + ctx.dataset._original[ctx.dataIndex] + ')' }
+                   : isSqrt ? { label: ctx => ctx.dataset.label + ': ' + ctx.dataset._original[ctx.dataIndex] }
+                   : {}
         }
       },
       scales:{
