@@ -145,6 +145,7 @@
       <div class="tabs" id="volTabs">
         <button class="tab on" data-mode="stacked">Empilé</button>
         <button class="tab" data-mode="line">Courbes</button>
+        <button class="tab" data-mode="line-log">Courbes (log)</button>
         <button class="tab" data-mode="100pct">100%</button>
       </div>
       <div class="chart-wrap" style="height:300px"><canvas id="volChart"></canvas></div>
@@ -167,6 +168,7 @@
         <div class="tabs" id="trendTabs">
           <button class="tab on" data-trend="rates">Taux (%)</button>
           <button class="tab" data-trend="volume">Volume clients</button>
+          <button class="tab" data-trend="volume-log">Volume (log)</button>
         </div>
         <div class="chart-wrap" style="height:320px"><canvas id="trendChart"></canvas></div>
       </div>
@@ -478,12 +480,15 @@ function renderVolChart() {
   const ctx = document.getElementById('volChart').getContext('2d');
   const weeks = STATE.weekly_vol.map(r => r.week);
   const pages = STATE.pages.filter(p => !hiddenPages.has(p));
+  const isLine = volMode === 'line' || volMode === 'line-log';
+  const isLog = volMode === 'line-log';
+  const isStacked = volMode === 'stacked' || volMode === '100pct';
   let datasets = pages.map(p => ({
     label: shortLabel(p), _page: p,
     data: STATE.weekly_vol.map(r => r[p]||0),
-    backgroundColor: volMode==='line' ? 'transparent' : hex2rgba(pageColor(p), 0.82),
+    backgroundColor: isLine ? 'transparent' : hex2rgba(pageColor(p), 0.82),
     borderColor: pageColor(p),
-    borderWidth: volMode==='line' ? 2 : 0,
+    borderWidth: isLine ? 2 : 0,
     fill: false, tension: 0.3, pointRadius: 0
   }));
   let yCb = v => v;
@@ -494,15 +499,24 @@ function renderVolChart() {
     });
     yCb = v => v+'%';
   }
+  if (isLog) {
+    // Log scale can't handle 0 — replace with null (Chart.js skips them and connects the line)
+    datasets.forEach(ds => { ds.data = ds.data.map(v => v > 0 ? v : null); ds.spanGaps = true; });
+  }
   charts.vol = new Chart(ctx, {
-    type: volMode==='line' ? 'line' : 'bar',
+    type: isLine ? 'line' : 'bar',
     data: { labels: weeks, datasets },
     options: {
       responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{display:false}, tooltip:{mode:'index',intersect:false} },
       scales:{
-        x:{ stacked: volMode!=='line', ticks:{color:'#9ca3af',font:{size:10},maxRotation:45}, grid:{display:false} },
-        y:{ stacked: volMode!=='line', ticks:{color:'#9ca3af',font:{size:10},callback:yCb}, grid:{color:'rgba(0,0,0,0.05)'} }
+        x:{ stacked: isStacked, ticks:{color:'#9ca3af',font:{size:10},maxRotation:45}, grid:{display:false} },
+        y:{
+          type: isLog ? 'logarithmic' : 'linear',
+          stacked: isStacked,
+          ticks:{color:'#9ca3af',font:{size:10},callback: isLog ? (v => Number.isInteger(Math.log10(v)) ? v : '') : yCb},
+          grid:{color:'rgba(0,0,0,0.05)'}
+        }
       }
     }
   });
@@ -538,12 +552,21 @@ function renderTrendChart() {
   if (charts.trend) charts.trend.destroy();
   const ctx = document.getElementById('trendChart').getContext('2d');
   const labels = STATE.weekly_conv.map(w=>w.week);
+  const isRates = trendMode === 'rates';
+  const isLog = trendMode === 'volume-log';
   let datasets;
-  if (trendMode === 'rates') {
+  if (isRates) {
     datasets = [
       {label:'Call rate',data:STATE.weekly_conv.map(w=>w.call_rate),borderColor:'#2563eb',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3},
       {label:'Reach rate',data:STATE.weekly_conv.map(w=>w.reach_rate),borderColor:'#16a34a',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3},
       {label:'Conv/reached',data:STATE.weekly_conv.map(w=>w.conv_reached),borderColor:'#dc2626',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3}
+    ];
+  } else if (isLog) {
+    const mapLog = arr => arr.map(v => v > 0 ? v : null);
+    datasets = [
+      {label:'Planifiés',data:mapLog(STATE.weekly_conv.map(w=>w.planned_u)),borderColor:'#2563eb',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3,spanGaps:true},
+      {label:'Reached',data:mapLog(STATE.weekly_conv.map(w=>w.reached_u)),borderColor:'#16a34a',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3,spanGaps:true},
+      {label:'Achats',data:mapLog(STATE.weekly_conv.map(w=>w.purchases_u)),borderColor:'#dc2626',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:0.3,spanGaps:true}
     ];
   } else {
     datasets = [
@@ -553,14 +576,18 @@ function renderTrendChart() {
     ];
   }
   charts.trend = new Chart(ctx, {
-    type: trendMode==='rates' ? 'line' : 'bar',
+    type: (isRates || isLog) ? 'line' : 'bar',
     data: { labels, datasets },
     options: {
       responsive:true, maintainAspectRatio:false,
       plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:11},color:'#6b7280',padding:12}},tooltip:{mode:'index',intersect:false}},
       scales:{
         x:{ticks:{color:'#9ca3af',font:{size:9},maxRotation:45},grid:{display:false}},
-        y:{ticks:{color:'#9ca3af',font:{size:10},callback:v=>trendMode==='rates'?v+'%':v},grid:{color:'rgba(0,0,0,0.05)'}}
+        y:{
+          type: isLog ? 'logarithmic' : 'linear',
+          ticks:{color:'#9ca3af',font:{size:10},callback: isLog ? (v => Number.isInteger(Math.log10(v)) ? v : '') : (v => isRates ? v+'%' : v)},
+          grid:{color:'rgba(0,0,0,0.05)'}
+        }
       }
     }
   });
