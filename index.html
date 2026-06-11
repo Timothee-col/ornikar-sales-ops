@@ -93,10 +93,19 @@
   details.schema ul { margin: 8px 0 0 18px; }
   details.schema code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; font-size: 11px; }
 
+  .spark-grid { display: flex; flex-direction: column; gap: 0; }
+  .spark-row { display: grid; grid-template-columns: 180px 1fr 160px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); gap: 12px; }
+  .spark-row:last-child { border-bottom: none; }
+  .spark-label { font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .spark-svg { height: 32px; width: 100%; }
+  .spark-vol { font-size: 12px; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+  .spark-vol-bar { height: 5px; border-radius: 3px; }
+
   @media (max-width: 768px) {
     .container { padding: 16px; }
     .kpi-row { grid-template-columns: repeat(2, 1fr); }
     .two-col { grid-template-columns: 1fr; }
+    .spark-row { grid-template-columns: 100px 1fr 100px; }
   }
 </style>
 </head>
@@ -150,6 +159,12 @@
       </div>
       <div class="chart-wrap" style="height:300px"><canvas id="volChart"></canvas></div>
       <p class="note">Lignes brutes — un learner avec plusieurs WCB est compté plusieurs fois</p>
+    </div>
+
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-title">Pattern par page · échelle individuelle + volume total</div>
+      <div id="sparkGrid" class="spark-grid"></div>
+      <p class="note">Chaque ligne a sa propre échelle Y (compare les patterns) — la barre à droite montre le volume total relatif (compare les volumes)</p>
     </div>
 
     <div class="two-col" style="margin-bottom:24px">
@@ -669,10 +684,41 @@ function renderSchema(cols) {
   document.getElementById('schemaInfo').style.display = 'block';
 }
 
+function renderSparklines() {
+  const el = document.getElementById('sparkGrid');
+  const totals = STATE.pages.map(p => ({ page: p, total: STATE.weekly_vol.reduce((s,r)=>s+(r[p]||0),0) }));
+  const sorted = totals.sort((a,b)=>b.total-a.total);
+  const maxTotal = sorted[0] ? sorted[0].total : 1;
+  const W = 600, H = 32, PAD = 3;
+  el.innerHTML = sorted.map(({page,total}) => {
+    const data = STATE.weekly_vol.map(r => r[page]||0);
+    const max = Math.max.apply(null, data);
+    const n = data.length;
+    const pts = data.map((v,i) => {
+      const x = PAD + (n>1 ? i*(W-2*PAD)/(n-1) : 0);
+      const y = H - PAD - (max>0 ? v/max : 0)*(H-2*PAD);
+      return x.toFixed(1)+','+y.toFixed(1);
+    }).join(' ');
+    const col = pageColor(page);
+    const barW = Math.round(total/maxTotal*100);
+    return `<div class="spark-row" title="${page} · max hebdo ${fmt(max)}">
+      <div class="spark-label" style="color:${col}">${shortLabel(page)}</div>
+      <svg class="spark-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      <div class="spark-vol">
+        <span class="spark-vol-bar" style="width:${barW}px;background:${hex2rgba(col,0.4)}"></span>
+        <span>${fmt(total)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function renderAll() {
   renderKPIs();
   renderLegend();
   renderVolChart();
+  renderSparklines();
   renderConvChart();
   renderTrendChart();
   renderMonthChart();
