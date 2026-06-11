@@ -319,12 +319,8 @@ function parseCSV(text) {
 // ============================================================
 function aggregate(parsed) {
   const rows = parsed.rows;
-  // Group: keep top 12 pages by volume, rest → "autres"
-  const counts = {};
-  for (const r of rows) counts[r.page] = (counts[r.page]||0)+1;
-  const sortedPages = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-  const topSet = new Set(sortedPages.slice(0,12).map(x=>x[0]));
-  rows.forEach(r => r.pageGroup = topSet.has(r.page) ? r.page : 'autres');
+  // Keep every page as its own group — no bucketing
+  rows.forEach(r => r.pageGroup = r.page);
 
   let allPages = [...new Set(rows.map(r=>r.pageGroup))];
   const volByPage = {};
