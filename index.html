@@ -472,19 +472,34 @@ function renderKPIs() {
   document.getElementById('kpi-conv-sub').textContent = fmt(t.purchased) + ' achats';
 }
 
+function isolateOrRestore(p) {
+  const visible = STATE.pages.filter(x => !hiddenPages.has(x));
+  if (visible.length === 1 && visible[0] === p) {
+    hiddenPages.clear();
+  } else {
+    hiddenPages = new Set(STATE.pages.filter(x => x !== p));
+  }
+  renderLegend();
+  renderVolChart();
+}
+
 function renderLegend() {
   const el = document.getElementById('volLegend');
   el.innerHTML = STATE.pages.map(p => `
-    <div class="legend-item ${hiddenPages.has(p)?'hidden':''}" data-page="${p}" title="${p}">
+    <div class="legend-item ${hiddenPages.has(p)?'hidden':''}" data-page="${p}" title="${p} · clic = isoler · shift+clic = masquer/afficher">
       <div class="legend-dot" style="background:${pageColor(p)}"></div>
       <span>${shortLabel(p)}</span>
     </div>`).join('');
   el.querySelectorAll('.legend-item').forEach(it => {
-    it.addEventListener('click', () => {
+    it.addEventListener('click', (e) => {
       const p = it.dataset.page;
-      hiddenPages.has(p) ? hiddenPages.delete(p) : hiddenPages.add(p);
-      renderLegend();
-      renderVolChart();
+      if (e.shiftKey) {
+        hiddenPages.has(p) ? hiddenPages.delete(p) : hiddenPages.add(p);
+        renderLegend();
+        renderVolChart();
+      } else {
+        isolateOrRestore(p);
+      }
     });
   });
 }
@@ -701,7 +716,7 @@ function renderSparklines() {
     }).join(' ');
     const col = pageColor(page);
     const barW = Math.round(total/maxTotal*100);
-    return `<div class="spark-row" title="${page} · max hebdo ${fmt(max)}">
+    return `<div class="spark-row" data-page="${page}" title="${page} · max hebdo ${fmt(max)} · clic = isoler dans le graphe ci-dessus" style="cursor:pointer">
       <div class="spark-label" style="color:${col}">${shortLabel(page)}</div>
       <svg class="spark-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
         <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/>
@@ -712,6 +727,12 @@ function renderSparklines() {
       </div>
     </div>`;
   }).join('');
+  el.querySelectorAll('.spark-row').forEach(row => {
+    row.addEventListener('click', () => {
+      isolateOrRestore(row.dataset.page);
+      document.getElementById('volChart').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
 }
 
 function renderAll() {
