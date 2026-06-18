@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Funnel Web Callback · Ornikar</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<title>Touchpoints Sales · Ornikar</title>
 <style>
   :root {
     --bg: #f7f6f3;
@@ -13,12 +12,12 @@
     --text: #1a1916;
     --muted: #6b6960;
     --hint: #a8a69f;
-    --blue: #2563eb;
-    --green: #16a34a;
-    --amber: #d97706;
-    --red: #dc2626;
-    --purple: #7c3aed;
-    --teal: #0d9488;
+    --site: #7c3aed;
+    --acq:  #0d9488;
+    --shop: #2563eb;
+    --prod: #d97706;
+    --chk:  #dc2626;
+    --tel:  #16a34a;
     --radius: 8px;
     --radius-lg: 12px;
   }
@@ -30,64 +29,79 @@
   header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
   header span { font-size: 12px; color: var(--muted); }
   header nav a { font-size: 12px; color: var(--muted); text-decoration: none; margin-left: 16px; }
-  header nav a:hover { color: var(--blue); }
+  header nav a:hover { color: var(--shop); }
 
-  .container { max-width: 1280px; margin: 0 auto; padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 28px 32px; display: flex; flex-direction: column; gap: 28px; }
 
-  .loading { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
-  .error { background: #fee2e2; color: #991b1b; padding: 12px 16px; border-radius: var(--radius); font-size: 13px; }
+  .intro { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 22px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .intro b { color: var(--text); }
+  .intro .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
+  .intro .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text); }
+  .intro .legend-dot { width: 14px; height: 14px; border-radius: 4px; }
 
-  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; }
-  .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
-  .kpi-value { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
-  .kpi-sub { font-size: 11px; color: var(--hint); margin-top: 3px; }
+  /* Phase block */
+  .phase { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .phase-head { display: flex; align-items: center; gap: 14px; padding: 16px 22px; border-bottom: 1px solid var(--border); background: #faf9f6; }
+  .phase-num { width: 32px; height: 32px; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+  .phase-title { flex: 1; }
+  .phase-title h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+  .phase-title p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .phase-count { font-size: 11px; color: var(--muted); background: var(--bg); padding: 4px 10px; border-radius: 20px; font-variant-numeric: tabular-nums; }
 
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; }
-  .card-title { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
-  .card-sub { font-size: 12px; color: var(--hint); margin-bottom: 14px; }
+  .phase-body { padding: 18px 22px; }
 
-  /* Sankey-like funnel */
-  .sankey { width: 100%; height: 520px; }
+  .group { margin-bottom: 18px; }
+  .group:last-child { margin-bottom: 0; }
+  .group-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
 
-  /* Stage funnel (vertical bars) */
-  .stage-funnel { display: flex; flex-direction: column; gap: 2px; padding: 8px 0; }
-  .stage { display: grid; grid-template-columns: 220px 1fr 130px; align-items: center; gap: 16px; }
-  .stage-label { font-size: 13px; font-weight: 500; }
-  .stage-label small { display: block; color: var(--muted); font-size: 11px; font-weight: 400; }
-  .stage-bar-wrap { background: #f0eee8; border-radius: 4px; height: 30px; position: relative; overflow: hidden; }
-  .stage-bar { height: 100%; transition: width .4s; display: flex; align-items: center; padding-left: 10px; color: #fff; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
-  .stage-rate { font-size: 12px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
-  .stage-rate b { color: var(--text); font-weight: 600; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
 
-  /* Touchpoint table */
-  table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  thead th { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; padding: 8px 10px; text-align: right; border-bottom: 1px solid var(--border); background: #faf9f6; position: sticky; top: 0; }
-  thead th:first-child, thead th:nth-child(2) { text-align: left; }
-  tbody tr { border-bottom: 1px solid var(--border); }
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: var(--bg); }
-  tbody td { padding: 8px 10px; text-align: right; color: var(--text); font-variant-numeric: tabular-nums; }
-  tbody td:first-child { text-align: left; color: var(--muted); }
-  tbody td:nth-child(2) { text-align: left; max-width: 360px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  tbody tr.group-header td { background: #faf9f6; color: var(--text); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; padding: 10px; }
+  .tp {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    background: #fff;
+    border-left-width: 3px;
+    transition: all .15s;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 70px;
+  }
+  .tp:hover { box-shadow: 0 2px 8px rgba(0,0,0,.05); transform: translateY(-1px); }
+  .tp-loc { font-size: 12px; font-weight: 600; color: var(--text); font-family: ui-monospace, 'SF Mono', Menlo, monospace; word-break: break-all; }
+  .tp-ctx { font-size: 11px; color: var(--muted); }
+  .tp-cta { font-size: 11px; color: var(--text); display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+  .tp-cta::before { content: '→'; color: var(--hint); }
+  .tp-dest { font-size: 10px; color: var(--hint); font-style: italic; margin-top: 2px; }
+  .tp-mult { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 10px; background: var(--bg); color: var(--muted); align-self: flex-start; }
 
-  .cat-pill { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 12px; color: #fff; text-transform: uppercase; letter-spacing: .04em; }
+  .tp.site         { border-left-color: var(--site); }
+  .tp.acq          { border-left-color: var(--acq); }
+  .tp.shop         { border-left-color: var(--shop); }
+  .tp.prod         { border-left-color: var(--prod); }
+  .tp.chk          { border-left-color: var(--chk); }
+  .tp.tel          { border-left-color: var(--tel); }
 
-  .bar-cell { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
-  .mini-bar { height: 6px; border-radius: 3px; background: #e4e2dc; flex-shrink: 0; }
+  .phase.site         .phase-num { background: var(--site); }
+  .phase.acq          .phase-num { background: var(--acq); }
+  .phase.shop         .phase-num { background: var(--shop); }
+  .phase.prod         .phase-num { background: var(--prod); }
+  .phase.chk          .phase-num { background: var(--chk); }
+  .phase.tel          .phase-num { background: var(--tel); }
 
-  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
-  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+  .arrow-down { text-align: center; font-size: 18px; color: var(--hint); padding: 4px 0; }
 
-  .note { font-size: 11px; color: var(--hint); margin-top: 12px; line-height: 1.5; }
-  .note b { color: var(--text); }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 0; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .stat-value { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; }
+  .stat-sub { font-size: 11px; color: var(--hint); margin-top: 3px; }
 
-  @media (max-width: 880px) {
+  @media (max-width: 768px) {
     .container { padding: 16px; }
-    .kpi-row { grid-template-columns: repeat(2, 1fr); }
-    .stage { grid-template-columns: 130px 1fr 80px; gap: 8px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .cards { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -95,350 +109,363 @@
 
 <header>
   <div class="left">
-    <h1>Funnel Web Callback — Site → Boutique → Appel</h1>
-    <span id="dataLabel">chargement…</span>
+    <h1>Touchpoints Sales — Cartographie des CTAs</h1>
+    <span>Toutes les occasions de parler à un conseiller</span>
   </div>
   <nav>
-    <a href="index.html">← Dashboard pages</a>
+    <a href="index.html">Analyse data →</a>
   </nav>
 </header>
 
 <div class="container">
 
-  <div id="loading" class="loading">Chargement de <code>data.csv</code>…</div>
-  <div id="errBox" class="error" style="display:none"></div>
-
-  <div id="dashboard" style="display:none">
-
-    <!-- KPIs -->
-    <div class="kpi-row">
-      <div class="kpi"><div class="kpi-label">WCB planifiés</div><div class="kpi-value" id="kpi-planned">—</div><div class="kpi-sub">total demandes</div></div>
-      <div class="kpi"><div class="kpi-label">Appels passés</div><div class="kpi-value" id="kpi-called">—</div><div class="kpi-sub" id="kpi-called-sub">—</div></div>
-      <div class="kpi"><div class="kpi-label">Appels aboutis</div><div class="kpi-value" id="kpi-reached">—</div><div class="kpi-sub" id="kpi-reached-sub">—</div></div>
-      <div class="kpi"><div class="kpi-label">Achats assistés</div><div class="kpi-value" id="kpi-assisted">—</div><div class="kpi-sub" id="kpi-assisted-sub">—</div></div>
-      <div class="kpi"><div class="kpi-label">Conv. globale</div><div class="kpi-value" id="kpi-conv">—</div><div class="kpi-sub">planifié → achat assisté</div></div>
+  <div class="intro">
+    Cartographie de <b>toutes les surfaces</b> où un prospect peut déclencher un échange avec un conseiller sales — du site Ornikar à la boutique en passant par les emails. Du haut vers le bas : parcours d'acquisition <b>← amont</b> vers <b>aval →</b>.
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:var(--site)"></span> Site ornikar.com</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--acq)"></span> Acquisition (email/widget)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--shop)"></span> Shop (landing)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--prod)"></span> Page produit</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--chk)"></span> Checkout</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--tel)"></span> Téléphone direct</div>
     </div>
-
-    <!-- Sankey flow -->
-    <div class="card">
-      <div class="card-title">Flux des touchpoints</div>
-      <div class="card-sub">De la source (site / shop / email) jusqu'à l'achat assisté par l'appel — épaisseur ∝ volume</div>
-      <svg id="sankey" class="sankey" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid meet"></svg>
-      <div class="legend">
-        <div class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span> Site (widgets)</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#0d9488"></span> Email CRM</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#2563eb"></span> Shop (landing)</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#d97706"></span> Page produit</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span> Checkout</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#a8a69f"></span> Inconnu / direct</div>
-      </div>
-    </div>
-
-    <!-- Funnel par source -->
-    <div class="card">
-      <div class="card-title">Funnel par source d'entrée</div>
-      <div class="card-sub">Conversion étape par étape — planifié → appelé → joint → achat assisté</div>
-      <div id="stagesContainer"></div>
-    </div>
-
-    <!-- Détail par touchpoint -->
-    <div class="card">
-      <div class="card-title">Détail par touchpoint</div>
-      <div class="card-sub">Trié par volume de WCB planifiés. <b>Conv.</b> = achats assistés / planifiés.</div>
-      <div style="max-height: 600px; overflow-y: auto;">
-        <table id="tpTable">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Touchpoint</th>
-              <th>Planifié</th>
-              <th>Appelé</th>
-              <th>Joint</th>
-              <th>Assisté</th>
-              <th>% Joint</th>
-              <th>Conv.</th>
-              <th>Volume</th>
-            </tr>
-          </thead>
-          <tbody id="tpBody"></tbody>
-        </table>
-      </div>
-      <div class="note">
-        <b>Lecture</b> : un WCB est planifié quand un visiteur clique sur le CTA "Être rappelé".
-        L'appel est ensuite passé par l'équipe edu (<i>Appelé</i>), peut être décroché (<i>Joint</i>),
-        et peut aboutir à un achat dans la foulée (<i>Assisté</i>, basé sur <code>is_last_call_assisting_purchase</code>).
-      </div>
-    </div>
-
   </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Surfaces totales</div><div class="stat-value">6</div><div class="stat-sub">phases du parcours</div></div>
+    <div class="stat"><div class="stat-label">Touchpoints uniques</div><div class="stat-value">50+</div><div class="stat-sub">placements de CTA</div></div>
+    <div class="stat"><div class="stat-label">Destinations</div><div class="stat-value">3</div><div class="stat-sub">Survicate / téléphone / chat</div></div>
+    <div class="stat"><div class="stat-label">Pages produit</div><div class="stat-value">18</div><div class="stat-sub">+ 14 variantes checkout</div></div>
+  </div>
+
+  <!-- PHASE 1: SITE -->
+  <div class="phase site">
+    <div class="phase-head">
+      <div class="phase-num">1</div>
+      <div class="phase-title">
+        <h2>Site ornikar.com — Découverte</h2>
+        <p>CTAs « Contacter un conseiller » placés sur le site éditorial avant l'entrée en boutique</p>
+      </div>
+      <div class="phase-count">10 surfaces</div>
+    </div>
+    <div class="phase-body">
+
+      <div class="group">
+        <div class="group-label">Présent sur toutes les pages (nav + footer)</div>
+        <div class="cards">
+          <div class="tp site">
+            <div class="tp-loc">Header / nav</div>
+            <div class="tp-ctx">Présent dans la barre de navigation de toutes les pages permis</div>
+            <div class="tp-cta">Contacter un conseiller</div>
+            <div class="tp-dest">→ formulaire Survicate</div>
+          </div>
+          <div class="tp site">
+            <div class="tp-loc">Footer "Aide & contact"</div>
+            <div class="tp-ctx">Lien en pied de page, accessible partout</div>
+            <div class="tp-cta">Contacter un conseiller</div>
+            <div class="tp-dest">→ formulaire Survicate</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">CTAs in-page (corps de page)</div>
+        <div class="cards">
+          <div class="tp site">
+            <div class="tp-loc">/permis</div>
+            <div class="tp-ctx">Landing page permis</div>
+            <span class="tp-mult">×3 dans la page</span>
+            <div class="tp-cta">Contacter un conseiller</div>
+            <div class="tp-dest">→ Survicate</div>
+          </div>
+          <div class="tp site">
+            <div class="tp-loc">/conduite-accompagnee</div>
+            <div class="tp-ctx">Page conduite accompagnée</div>
+            <div class="tp-cta">Contacter un conseiller</div>
+            <div class="tp-dest">→ Survicate</div>
+          </div>
+          <div class="tp site">
+            <div class="tp-loc">/permis/demarches/financer-permis/cpf</div>
+            <div class="tp-ctx">Page financement CPF</div>
+            <div class="tp-cta">Contacter un conseiller</div>
+            <div class="tp-dest">→ Survicate</div>
+          </div>
+          <div class="tp tel">
+            <div class="tp-loc">/choisir-auto-ecole-enfant</div>
+            <div class="tp-ctx">Page parents / enfant</div>
+            <span class="tp-mult">×5 numéros affichés</span>
+            <div class="tp-cta">Appeler un conseiller — 01 86 65 54 22</div>
+            <div class="tp-dest">→ téléphone direct</div>
+          </div>
+          <div class="tp site">
+            <div class="tp-loc">/permis/types/b</div>
+            <div class="tp-ctx">Page permis B</div>
+            <div class="tp-cta">Contacter un conseiller</div>
+            <div class="tp-dest">→ Survicate (menu)</div>
+          </div>
+          <div class="tp site">
+            <div class="tp-loc">/code/examen</div>
+            <div class="tp-ctx">Page examen du code</div>
+            <div class="tp-cta">Contacter un conseiller</div>
+            <div class="tp-dest">→ Survicate (menu)</div>
+          </div>
+          <div class="tp site">
+            <div class="tp-loc">/permis/demarches/prix/pas-cher</div>
+            <div class="tp-ctx">Page tarif</div>
+            <div class="tp-cta">Contacter un conseiller</div>
+            <div class="tp-dest">→ Survicate (footer)</div>
+          </div>
+          <div class="tp tel">
+            <div class="tp-loc">/stage</div>
+            <div class="tp-ctx">Stage de récupération de points</div>
+            <div class="tp-cta">Contactez-nous — 09 70 70 50 61</div>
+            <div class="tp-dest">→ téléphone direct</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <!-- PHASE 2: ACQUISITION (EMAIL/WIDGETS) -->
+  <div class="phase acq">
+    <div class="phase-head">
+      <div class="phase-num">2</div>
+      <div class="phase-title">
+        <h2>Acquisition — Email CRM &amp; widgets</h2>
+        <p>Surfaces de contact en dehors du parcours produit (campagnes outbound, widgets persistants)</p>
+      </div>
+      <div class="phase-count">6 touchpoints</div>
+    </div>
+    <div class="phase-body">
+
+      <div class="group">
+        <div class="group-label">Campagnes email outbound</div>
+        <div class="cards">
+          <div class="tp acq">
+            <div class="tp-loc">emailcrm</div>
+            <div class="tp-ctx">Body d'un email CRM</div>
+            <div class="tp-cta">CTA dans le contenu de l'email</div>
+            <div class="tp-dest">→ landing avec callback pre-rempli</div>
+          </div>
+          <div class="tp acq">
+            <div class="tp-loc">emailcrmheader</div>
+            <div class="tp-ctx">Header / haut d'un email CRM</div>
+            <div class="tp-cta">CTA en en-tête d'email</div>
+            <div class="tp-dest">→ landing callback</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">Widgets persistants sur le site</div>
+        <div class="cards">
+          <div class="tp acq">
+            <div class="tp-loc">home_widget</div>
+            <div class="tp-ctx">Widget callback sur la home</div>
+            <div class="tp-cta">Bouton flottant / module home</div>
+            <div class="tp-dest">→ formulaire WCB</div>
+          </div>
+          <div class="tp acq">
+            <div class="tp-loc">permis_widget</div>
+            <div class="tp-ctx">Widget callback section permis</div>
+            <div class="tp-cta">Module dédié page permis</div>
+            <div class="tp-dest">→ formulaire WCB</div>
+          </div>
+          <div class="tp acq">
+            <div class="tp-loc">infocards</div>
+            <div class="tp-ctx">Cartes d'information éditoriales</div>
+            <div class="tp-cta">CTA inline dans une infocard</div>
+            <div class="tp-dest">→ formulaire WCB</div>
+          </div>
+          <div class="tp acq">
+            <div class="tp-loc">chatbot_support</div>
+            <div class="tp-ctx">Suggestion dans le chatbot support</div>
+            <div class="tp-cta">"Parler à un humain"</div>
+            <div class="tp-dest">→ formulaire WCB</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <!-- PHASE 3: SHOP LANDING -->
+  <div class="phase shop">
+    <div class="phase-head">
+      <div class="phase-num">3</div>
+      <div class="phase-title">
+        <h2>Boutique — Landing</h2>
+        <p>Entrée principale dans la boutique en ligne (shop.ornikar.com)</p>
+      </div>
+      <div class="phase-count">1 surface</div>
+    </div>
+    <div class="phase-body">
+      <div class="cards">
+        <div class="tp shop">
+          <div class="tp-loc">shop</div>
+          <div class="tp-ctx">Page d'accueil de la boutique — avant choix produit</div>
+          <div class="tp-cta">CTA callback global</div>
+          <div class="tp-dest">→ formulaire WCB générique</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <!-- PHASE 4: PRODUCT PAGES -->
+  <div class="phase prod">
+    <div class="phase-head">
+      <div class="phase-num">4</div>
+      <div class="phase-title">
+        <h2>Pages produit</h2>
+        <p>CTA callback sur chaque page produit — contextualisé (le sales sait quel pack le prospect regarde)</p>
+      </div>
+      <div class="phase-count">18 produits</div>
+    </div>
+    <div class="phase-body">
+
+      <div class="group">
+        <div class="group-label">Pack permis complet — boîte manuelle</div>
+        <div class="cards">
+          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet</div><div class="tp-ctx">Pack standard</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-sans-code</div><div class="tp-ctx">Sans code</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-sans-code-lead</div><div class="tp-ctx">Variante lead</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-revolut</div><div class="tp-ctx">Partenariat Revolut</div></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">Pack permis complet — boîte automatique</div>
+        <div class="cards">
+          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-boite-automatique</div><div class="tp-ctx">Pack standard auto</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-boite-automatique-sans-code</div><div class="tp-ctx">Auto sans code</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-boite-automatique-sans-code-lead</div><div class="tp-ctx">Auto sans code lead</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-boite-automatique-revolut</div><div class="tp-ctx">Auto Revolut</div></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">Packs heures de conduite</div>
+        <div class="cards">
+          <div class="tp prod"><div class="tp-loc">product/pack-5h</div><div class="tp-ctx">5h manuelle</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-10h</div><div class="tp-ctx">10h manuelle</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-20h</div><div class="tp-ctx">20h manuelle</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-5h-boite-automatique</div><div class="tp-ctx">5h auto</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-10h-boite-automatique</div><div class="tp-ctx">10h auto</div></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">Conduite accompagnée &amp; pédagogie</div>
+        <div class="cards">
+          <div class="tp prod"><div class="tp-loc">product/conduite-accompagnee-first</div><div class="tp-ctx">Conduite accompagnée manuelle</div></div>
+          <div class="tp prod"><div class="tp-loc">product/conduite-accompagnee-boite-automatique-first</div><div class="tp-ctx">Conduite accompagnée auto</div></div>
+          <div class="tp prod"><div class="tp-loc">product/rendez-vous-pedagogiques</div><div class="tp-ctx">RDV pédago manuelle</div></div>
+          <div class="tp prod"><div class="tp-loc">product/rendez-vous-pedagogiques-automatique</div><div class="tp-ctx">RDV pédago auto</div></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">Offres régionales</div>
+        <div class="cards">
+          <div class="tp prod"><div class="tp-loc">product/pack-permis-casa-nord-france</div><div class="tp-ctx">Pack CASA Nord France</div></div>
+          <div class="tp prod"><div class="tp-loc">product/pack-permis-boite-automatique-casa-nord-france</div><div class="tp-ctx">Pack CASA Nord France auto</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <!-- PHASE 5: CHECKOUT -->
+  <div class="phase chk">
+    <div class="phase-head">
+      <div class="phase-num">5</div>
+      <div class="phase-title">
+        <h2>Checkout</h2>
+        <p>CTA callback dans le tunnel d'achat — pour les prospects sur le point de payer mais avec une question</p>
+      </div>
+      <div class="phase-count">14 produits</div>
+    </div>
+    <div class="phase-body">
+
+      <div class="group">
+        <div class="group-label">Pack permis complet — checkout</div>
+        <div class="cards">
+          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-sans-code</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-sans-code-lead</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-revolut</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-boite-automatique</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-boite-automatique-sans-code</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-boite-automatique-sans-code-lead</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-boite-automatique-revolut</div></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">Packs heures — checkout</div>
+        <div class="cards">
+          <div class="tp chk"><div class="tp-loc">checkout/pack-5h</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-10h</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-20h</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-5h-boite-automatique</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-10h-boite-automatique</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-10h-boite-automatique</div></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-label">Autres produits — checkout</div>
+        <div class="cards">
+          <div class="tp chk"><div class="tp-loc">checkout/conduite-accompagnee-first</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/conduite-accompagnee-boite-automatique-first</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/rendez-vous-pedagogiques</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-casa-nord-france</div></div>
+          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-boite-automatique-casa-nord-france</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <!-- PHASE 6: TELEPHONE DIRECT (out of WCB flow) -->
+  <div class="phase tel">
+    <div class="phase-head">
+      <div class="phase-num">6</div>
+      <div class="phase-title">
+        <h2>Hors funnel WCB — Numéros directs</h2>
+        <p>Le prospect peut sauter le formulaire et appeler immédiatement (hors tracking web callback)</p>
+      </div>
+      <div class="phase-count">2 numéros</div>
+    </div>
+    <div class="phase-body">
+      <div class="cards">
+        <div class="tp tel">
+          <div class="tp-loc">01 86 65 54 22</div>
+          <div class="tp-ctx">Affiché sur /choisir-auto-ecole-enfant</div>
+          <div class="tp-cta">Appel direct sans planification</div>
+        </div>
+        <div class="tp tel">
+          <div class="tp-loc">09 70 70 50 61</div>
+          <div class="tp-ctx">Affiché sur /stage (récupération de points)</div>
+          <div class="tp-cta">Appel direct sans planification</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<script>
-const CATEGORIES = {
-  site_widget:  { color: '#7c3aed', label: 'Site (widgets)' },
-  site_email:   { color: '#0d9488', label: 'Email CRM' },
-  shop_home:    { color: '#2563eb', label: 'Shop (landing)' },
-  shop_product: { color: '#d97706', label: 'Page produit' },
-  shop_checkout:{ color: '#dc2626', label: 'Checkout' },
-  unknown:      { color: '#a8a69f', label: 'Inconnu / direct' },
-};
-
-const ORDER = ['site_widget','site_email','shop_home','shop_product','shop_checkout','unknown'];
-
-function classify(loc) {
-  if (!loc || loc === 'unknown') return 'unknown';
-  const l = loc.toLowerCase();
-  if (l.startsWith('emailcrm')) return 'site_email';
-  if (['home_widget','permis_widget','infocards','chatbot_support'].includes(l)) return 'site_widget';
-  if (l === 'shop') return 'shop_home';
-  if (l.startsWith('product/')) return 'shop_product';
-  if (l.startsWith('checkout/')) return 'shop_checkout';
-  if (l.startsWith('pack-') || l.startsWith('conduite-accompagnee') || l.startsWith('rendez-vous')) return 'shop_product';
-  return 'unknown';
-}
-
-function fmt(n) { return n.toLocaleString('fr-FR'); }
-function pct(n, d) { if (!d) return '—'; return (n/d*100).toFixed(1) + '%'; }
-
-function aggregate(rows) {
-  const byTp = new Map();
-  const byCat = new Map();
-  ORDER.forEach(c => byCat.set(c, { planned:0, called:0, reached:0, assisted:0 }));
-
-  for (const r of rows) {
-    if (r.call_reason !== 'EDU - Web Callback') continue;
-    const loc = r.planned_call_page_location || 'unknown';
-    const cat = classify(loc);
-    if (!byTp.has(loc)) byTp.set(loc, { planned:0, called:0, reached:0, assisted:0, cat });
-    const t = byTp.get(loc);
-    const c = byCat.get(cat);
-    t.planned++; c.planned++;
-    if (r.call_id) { t.called++; c.called++; }
-    if (r.has_call_reached === 'true') { t.reached++; c.reached++; }
-    if (r.is_last_call_assisting_purchase === 'true') { t.assisted++; c.assisted++; }
-  }
-  return { byTp, byCat };
-}
-
-function renderKpis(byCat) {
-  let p=0, c=0, r=0, a=0;
-  for (const v of byCat.values()) { p+=v.planned; c+=v.called; r+=v.reached; a+=v.assisted; }
-  document.getElementById('kpi-planned').textContent = fmt(p);
-  document.getElementById('kpi-called').textContent = fmt(c);
-  document.getElementById('kpi-called-sub').textContent = pct(c,p) + ' des planifiés';
-  document.getElementById('kpi-reached').textContent = fmt(r);
-  document.getElementById('kpi-reached-sub').textContent = pct(r,c) + ' des appelés';
-  document.getElementById('kpi-assisted').textContent = fmt(a);
-  document.getElementById('kpi-assisted-sub').textContent = pct(a,r) + ' des joints';
-  document.getElementById('kpi-conv').textContent = pct(a,p);
-}
-
-function renderStages(byCat) {
-  const cont = document.getElementById('stagesContainer');
-  cont.innerHTML = '';
-  for (const cat of ORDER) {
-    const v = byCat.get(cat);
-    if (!v || v.planned === 0) continue;
-    const max = v.planned;
-    const stages = [
-      ['Planifié', v.planned, 1],
-      ['Appelé',   v.called,  v.called/max],
-      ['Joint',    v.reached, v.reached/max],
-      ['Assisté',  v.assisted,v.assisted/max],
-    ];
-    const block = document.createElement('div');
-    block.className = 'card';
-    block.style.background = '#faf9f6';
-    block.style.padding = '14px 16px';
-    block.style.marginBottom = '10px';
-    block.style.border = 'none';
-    const head = document.createElement('div');
-    head.style.cssText = 'display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px';
-    head.innerHTML = `
-      <div style="font-size:13px;font-weight:600">
-        <span class="cat-pill" style="background:${CATEGORIES[cat].color}">${CATEGORIES[cat].label}</span>
-        <span style="margin-left:8px;color:var(--muted);font-weight:400;font-size:11px">${fmt(v.planned)} WCB</span>
-      </div>
-      <div style="font-size:12px;color:var(--muted)">Conv. globale: <b style="color:var(--text)">${pct(v.assisted,v.planned)}</b></div>
-    `;
-    block.appendChild(head);
-    const sf = document.createElement('div');
-    sf.className = 'stage-funnel';
-    for (const [name, n, ratio] of stages) {
-      const row = document.createElement('div');
-      row.className = 'stage';
-      row.innerHTML = `
-        <div class="stage-label">${name}<small>${fmt(n)}</small></div>
-        <div class="stage-bar-wrap"><div class="stage-bar" style="width:${(ratio*100).toFixed(1)}%; background:${CATEGORIES[cat].color}">${ratio>0.05?(ratio*100).toFixed(0)+'%':''}</div></div>
-        <div class="stage-rate"><b>${(ratio*100).toFixed(1)}%</b></div>
-      `;
-      sf.appendChild(row);
-    }
-    block.appendChild(sf);
-    cont.appendChild(block);
-  }
-}
-
-function renderTable(byTp) {
-  const body = document.getElementById('tpBody');
-  body.innerHTML = '';
-  // Group by category, sort each group by volume
-  const groups = {};
-  for (const [loc, v] of byTp.entries()) {
-    (groups[v.cat] ||= []).push([loc, v]);
-  }
-  const maxVol = Math.max(...[...byTp.values()].map(v => v.planned));
-  for (const cat of ORDER) {
-    const items = groups[cat];
-    if (!items) continue;
-    items.sort((a,b) => b[1].planned - a[1].planned);
-    const gh = document.createElement('tr');
-    gh.className = 'group-header';
-    gh.innerHTML = `<td colspan="9"><span class="cat-pill" style="background:${CATEGORIES[cat].color}">${CATEGORIES[cat].label}</span> · ${items.length} touchpoint(s)</td>`;
-    body.appendChild(gh);
-    for (const [loc, v] of items) {
-      const tr = document.createElement('tr');
-      const barW = (v.planned/maxVol*120).toFixed(0);
-      tr.innerHTML = `
-        <td><span class="cat-pill" style="background:${CATEGORIES[cat].color};opacity:.7">·</span></td>
-        <td title="${loc}">${loc}</td>
-        <td>${fmt(v.planned)}</td>
-        <td>${fmt(v.called)}</td>
-        <td>${fmt(v.reached)}</td>
-        <td>${fmt(v.assisted)}</td>
-        <td>${pct(v.reached,v.called)}</td>
-        <td><b>${pct(v.assisted,v.planned)}</b></td>
-        <td><div class="bar-cell"><div class="mini-bar" style="width:${barW}px;background:${CATEGORIES[cat].color}"></div></div></td>
-      `;
-      body.appendChild(tr);
-    }
-  }
-}
-
-function renderSankey(byCat) {
-  const svg = document.getElementById('sankey');
-  svg.innerHTML = '';
-  const W = 1200, H = 520;
-  const PAD = 20;
-  const colX = [PAD, 280, 540, 800, 1060];
-  const colW = 28;
-  const stages = ['Source', 'Planifié', 'Appelé', 'Joint', 'Assisté'];
-
-  // Stage totals
-  const totals = { planned:0, called:0, reached:0, assisted:0 };
-  for (const v of byCat.values()) { totals.planned+=v.planned; totals.called+=v.called; totals.reached+=v.reached; totals.assisted+=v.assisted; }
-  const maxTotal = totals.planned;
-  const scale = (H - 2*PAD) / maxTotal;
-
-  // Draw column rectangles per stage
-  const stageHeights = [totals.planned, totals.planned, totals.called, totals.reached, totals.assisted];
-
-  // Per category, compute y-offsets at each stage
-  const catData = ORDER.filter(c => byCat.get(c) && byCat.get(c).planned > 0);
-  let yOff = Array(5).fill(PAD);
-
-  // Draw flows between consecutive stages
-  for (let s = 0; s < 4; s++) {
-    let catYStart = [...yOff];
-    let catYEnd = [...yOff];
-    const stageKeys = ['planned','planned','called','reached','assisted'];
-    const fromKey = stageKeys[s];
-    const toKey = stageKeys[s+1];
-    let yL = yOff[s], yR = yOff[s+1];
-    for (const cat of catData) {
-      const v = byCat.get(cat);
-      const hL = v[fromKey] * scale;
-      const hR = v[toKey] * scale;
-      const x0 = colX[s] + colW;
-      const x1 = colX[s+1];
-      const cx = (x0 + x1) / 2;
-      // Smooth bezier flow
-      const path = `M${x0},${yL} C${cx},${yL} ${cx},${yR} ${x1},${yR} L${x1},${yR+hR} C${cx},${yR+hR} ${cx},${yL+hL} ${x0},${yL+hL} Z`;
-      const p = document.createElementNS('http://www.w3.org/2000/svg','path');
-      p.setAttribute('d', path);
-      p.setAttribute('fill', CATEGORIES[cat].color);
-      p.setAttribute('opacity', '0.45');
-      svg.appendChild(p);
-      yL += hL;
-      yR += hR;
-    }
-  }
-
-  // Draw stage nodes (columns)
-  yOff = Array(5).fill(PAD);
-  const stageKeys = ['planned','planned','called','reached','assisted'];
-  for (let s = 0; s < 5; s++) {
-    let y = PAD;
-    for (const cat of catData) {
-      const v = byCat.get(cat);
-      const h = v[stageKeys[s]] * scale;
-      if (h < 0.5) { continue; }
-      const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
-      rect.setAttribute('x', colX[s]);
-      rect.setAttribute('y', y);
-      rect.setAttribute('width', colW);
-      rect.setAttribute('height', h);
-      rect.setAttribute('fill', CATEGORIES[cat].color);
-      svg.appendChild(rect);
-      y += h;
-    }
-    // Stage label
-    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
-    t.setAttribute('x', colX[s] + colW/2);
-    t.setAttribute('y', PAD - 6);
-    t.setAttribute('text-anchor','middle');
-    t.setAttribute('font-size','12');
-    t.setAttribute('font-weight','600');
-    t.setAttribute('fill','#1a1916');
-    t.textContent = stages[s];
-    svg.appendChild(t);
-    // Total label
-    const tv = document.createElementNS('http://www.w3.org/2000/svg','text');
-    tv.setAttribute('x', colX[s] + colW/2);
-    tv.setAttribute('y', H - 4);
-    tv.setAttribute('text-anchor','middle');
-    tv.setAttribute('font-size','11');
-    tv.setAttribute('fill','#6b6960');
-    const totalAtStage = catData.reduce((a,c) => a + byCat.get(c)[stageKeys[s]], 0);
-    tv.textContent = fmt(totalAtStage);
-    svg.appendChild(tv);
-  }
-}
-
-async function loadCsv() {
-  try {
-    const r = await fetch('data.csv');
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const text = await r.text();
-    Papa.parse(text, {
-      header: true, skipEmptyLines: true,
-      complete: (res) => {
-        document.getElementById('dataLabel').textContent = `${fmt(res.data.length)} lignes · ${new Date().toLocaleDateString('fr-FR')}`;
-        const { byTp, byCat } = aggregate(res.data);
-        renderKpis(byCat);
-        renderSankey(byCat);
-        renderStages(byCat);
-        renderTable(byTp);
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'flex';
-        document.getElementById('dashboard').style.flexDirection = 'column';
-        document.getElementById('dashboard').style.gap = '24px';
-      },
-      error: (e) => showError(e.message),
-    });
-  } catch (e) {
-    showError(e.message);
-  }
-}
-
-function showError(msg) {
-  document.getElementById('loading').style.display = 'none';
-  const e = document.getElementById('errBox');
-  e.style.display = 'block';
-  e.textContent = 'Erreur : ' + msg;
-}
-
-loadCsv();
-</script>
 </body>
 </html>
