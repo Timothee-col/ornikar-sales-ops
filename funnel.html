@@ -52,7 +52,7 @@
   .map-canvas {
     position: relative;
     width: 100%;
-    height: 520px;
+    height: 480px;
   }
   .map-svg {
     position: absolute;
@@ -66,7 +66,7 @@
   .phase-col {
     position: absolute;
     top: 40px;
-    bottom: 90px;
+    bottom: 28px;
     pointer-events: none;
     z-index: 1;
   }
@@ -316,7 +316,7 @@
   <!-- === Horizontal map === -->
   <div class="map-wrap">
     <div class="map-canvas" id="canvas">
-      <svg class="map-svg" id="mapSvg" viewBox="0 0 1320 520" preserveAspectRatio="xMidYMid meet"></svg>
+      <svg class="map-svg" id="mapSvg" viewBox="0 0 1320 480" preserveAspectRatio="xMidYMid meet"></svg>
 
       <!-- ENTRY -->
       <div class="endpoint" style="top: 50%; left: 12px; transform: translateY(-50%); border-color: var(--muted);">
@@ -324,44 +324,47 @@
         Prospect
       </div>
 
-      <!-- PHASE 1: SITE (x: 120-330, width 210) — items spread 60 → 490 -->
+      <!-- PHASE 1: SITE (x: 120-330, width 210) — items split above/below spine at y=235 -->
       <div class="phase-col site" style="left: 120px; width: 210px;">
         <div class="bg"></div>
         <div class="col-label"><div class="num">1</div>Site<span class="cnt">· 9</span></div>
       </div>
-      <div class="sub-label" style="top: 60px; left: 134px;">Global</div>
-      <div class="tp site major" style="top: 78px; left: 130px;"><span class="dot"></span>🧭 Header / Nav</div>
-      <div class="tp site major" style="top: 116px; left: 130px;"><span class="dot"></span>📋 Footer</div>
+      <!-- ABOVE -->
+      <div class="sub-label" style="top: 56px; left: 134px;">Global</div>
+      <div class="tp site major" style="top: 74px; left: 130px;"><span class="dot"></span>🧭 Header / Nav</div>
+      <div class="tp site major" style="top: 108px; left: 130px;"><span class="dot"></span>📋 Footer</div>
+      <div class="sub-label" style="top: 150px; left: 134px;">Landing principale</div>
+      <div class="tp site" style="top: 168px; left: 130px;"><span class="dot"></span>/permis<small>×3</small></div>
+      <!-- BELOW -->
+      <div class="sub-label" style="top: 268px; left: 134px;">Autres landings</div>
+      <div class="tp site" style="top: 286px; left: 130px;"><span class="dot"></span>/conduite-accompagnee</div>
+      <div class="tp site" style="top: 314px; left: 130px;"><span class="dot"></span>/cpf<small>financement</small></div>
+      <div class="tp site" style="top: 342px; left: 130px;"><span class="dot"></span>/permis/types/b</div>
+      <div class="tp site" style="top: 370px; left: 130px;"><span class="dot"></span>/code/examen</div>
+      <div class="tp site" style="top: 398px; left: 130px;"><span class="dot"></span>/permis/.../pas-cher</div>
+      <div class="tp site" style="top: 426px; left: 130px;"><span class="dot"></span>/choisir-auto-ecole-enfant</div>
 
-      <div class="sub-label" style="top: 170px; left: 134px;">Landings éditoriales</div>
-      <div class="tp site" style="top: 188px; left: 130px;"><span class="dot"></span>/permis<small>×3</small></div>
-      <div class="tp site" style="top: 222px; left: 130px;"><span class="dot"></span>/conduite-accompagnee</div>
-      <div class="tp site" style="top: 256px; left: 130px;"><span class="dot"></span>/cpf<small>financement</small></div>
-      <div class="tp site" style="top: 290px; left: 130px;"><span class="dot"></span>/permis/types/b</div>
-      <div class="tp site" style="top: 324px; left: 130px;"><span class="dot"></span>/code/examen</div>
-      <div class="tp site" style="top: 358px; left: 130px;"><span class="dot"></span>/permis/.../pas-cher</div>
-      <div class="tp site" style="top: 392px; left: 130px;"><span class="dot"></span>/choisir-auto-ecole-enfant</div>
-
-      <!-- PHASE 2: ACQUISITION (x: 350-520, width 170) -->
+      <!-- PHASE 2: ACQUISITION — items split above/below -->
       <div class="phase-col acq" style="left: 350px; width: 170px;">
         <div class="bg"></div>
         <div class="col-label"><div class="num">2</div>Acquisition<span class="cnt">· 5</span></div>
       </div>
-      <div class="sub-label" style="top: 60px; left: 364px;">Email CRM</div>
-      <div class="tp acq major" style="top: 78px; left: 360px;"><span class="dot"></span>✉️ emailcrm<small>body</small></div>
-      <div class="tp acq major" style="top: 116px; left: 360px;"><span class="dot"></span>✉️ emailcrmheader</div>
-
-      <div class="sub-label" style="top: 200px; left: 364px;">Widgets</div>
-      <div class="tp acq" style="top: 218px; left: 360px;"><span class="dot"></span>🏠 home_widget</div>
-      <div class="tp acq" style="top: 252px; left: 360px;"><span class="dot"></span>🚗 permis_widget</div>
-      <div class="tp acq" style="top: 286px; left: 360px;"><span class="dot"></span>🗂️ infocards</div>
+      <!-- ABOVE: Email CRM -->
+      <div class="sub-label" style="top: 56px; left: 364px;">Email CRM</div>
+      <div class="tp acq major" style="top: 74px; left: 360px;"><span class="dot"></span>✉️ emailcrm<small>body</small></div>
+      <div class="tp acq major" style="top: 112px; left: 360px;"><span class="dot"></span>✉️ emailcrmheader</div>
+      <!-- BELOW: Widgets -->
+      <div class="sub-label" style="top: 268px; left: 364px;">Widgets</div>
+      <div class="tp acq" style="top: 286px; left: 360px;"><span class="dot"></span>🏠 home_widget</div>
+      <div class="tp acq" style="top: 320px; left: 360px;"><span class="dot"></span>🚗 permis_widget</div>
+      <div class="tp acq" style="top: 354px; left: 360px;"><span class="dot"></span>🗂️ infocards</div>
 
       <!-- PHASE 3: SHOP (x: 540-650, width 110) -->
       <div class="phase-col shop" style="left: 540px; width: 110px;">
         <div class="bg"></div>
         <div class="col-label"><div class="num">3</div>Shop<span class="cnt">· 1</span></div>
       </div>
-      <div class="tp shop major" style="top: 50%; left: 595px; transform: translate(-50%, -50%);">
+      <div class="tp shop major" style="top: 140px; left: 595px; transform: translateX(-50%);">
         <span class="dot"></span>🛍️ shop
       </div>
 
@@ -371,39 +374,39 @@
         <div class="col-label"><div class="num">4</div>Produit<span class="cnt">· 18</span></div>
       </div>
 
-      <!-- sub-col A (680): 2 groups × 4 items each, spread over 60-460 -->
-      <div class="sub-label" style="top: 60px; left: 684px;">📦 Complet manu.</div>
-      <div class="tp prod" style="top: 78px; left: 680px;"><span class="dot"></span>standard</div>
-      <div class="tp prod" style="top: 112px; left: 680px;"><span class="dot"></span>sans-code</div>
-      <div class="tp prod" style="top: 146px; left: 680px;"><span class="dot"></span>sans-code-lead</div>
-      <div class="tp prod" style="top: 180px; left: 680px;"><span class="dot"></span>revolut</div>
+      <!-- sub-col A (680): Complet manu (above) + Complet auto (below) -->
+      <div class="sub-label" style="top: 56px; left: 684px;">📦 Complet manu.</div>
+      <div class="tp prod" style="top: 74px; left: 680px;"><span class="dot"></span>standard</div>
+      <div class="tp prod" style="top: 104px; left: 680px;"><span class="dot"></span>sans-code</div>
+      <div class="tp prod" style="top: 134px; left: 680px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp prod" style="top: 164px; left: 680px;"><span class="dot"></span>revolut</div>
 
-      <div class="sub-label" style="top: 254px; left: 684px;">📦 Complet auto</div>
-      <div class="tp prod" style="top: 272px; left: 680px;"><span class="dot"></span>standard</div>
-      <div class="tp prod" style="top: 306px; left: 680px;"><span class="dot"></span>sans-code</div>
-      <div class="tp prod" style="top: 340px; left: 680px;"><span class="dot"></span>sans-code-lead</div>
-      <div class="tp prod" style="top: 374px; left: 680px;"><span class="dot"></span>revolut</div>
+      <div class="sub-label" style="top: 268px; left: 684px;">📦 Complet auto</div>
+      <div class="tp prod" style="top: 286px; left: 680px;"><span class="dot"></span>standard</div>
+      <div class="tp prod" style="top: 316px; left: 680px;"><span class="dot"></span>sans-code</div>
+      <div class="tp prod" style="top: 346px; left: 680px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp prod" style="top: 376px; left: 680px;"><span class="dot"></span>revolut</div>
 
-      <!-- sub-col B (780): 5 heures + 2 régional -->
-      <div class="sub-label" style="top: 60px; left: 784px;">⏱️ Heures</div>
-      <div class="tp prod" style="top: 78px; left: 780px;"><span class="dot"></span>pack-5h</div>
-      <div class="tp prod" style="top: 112px; left: 780px;"><span class="dot"></span>pack-10h</div>
-      <div class="tp prod" style="top: 146px; left: 780px;"><span class="dot"></span>pack-20h</div>
-      <div class="tp prod" style="top: 180px; left: 780px;"><span class="dot"></span>5h-auto</div>
-      <div class="tp prod" style="top: 214px; left: 780px;"><span class="dot"></span>10h-auto</div>
+      <!-- sub-col B (780): Heures (above, 5 items tight) + Régional (below) -->
+      <div class="sub-label" style="top: 56px; left: 784px;">⏱️ Heures</div>
+      <div class="tp prod" style="top: 74px; left: 780px;"><span class="dot"></span>pack-5h</div>
+      <div class="tp prod" style="top: 100px; left: 780px;"><span class="dot"></span>pack-10h</div>
+      <div class="tp prod" style="top: 126px; left: 780px;"><span class="dot"></span>pack-20h</div>
+      <div class="tp prod" style="top: 152px; left: 780px;"><span class="dot"></span>5h-auto</div>
+      <div class="tp prod" style="top: 178px; left: 780px;"><span class="dot"></span>10h-auto</div>
 
-      <div class="sub-label" style="top: 300px; left: 784px;">📍 Régional</div>
-      <div class="tp prod" style="top: 318px; left: 780px;"><span class="dot"></span>casa-nord</div>
-      <div class="tp prod" style="top: 352px; left: 780px;"><span class="dot"></span>casa-nord auto</div>
+      <div class="sub-label" style="top: 268px; left: 784px;">📍 Régional</div>
+      <div class="tp prod" style="top: 286px; left: 780px;"><span class="dot"></span>casa-nord</div>
+      <div class="tp prod" style="top: 316px; left: 780px;"><span class="dot"></span>casa-nord auto</div>
 
-      <!-- sub-col C (870): cond.acc + RDV pédago -->
-      <div class="sub-label" style="top: 60px; left: 874px;">🚙 Cond. acc.</div>
-      <div class="tp prod" style="top: 78px; left: 870px;"><span class="dot"></span>first manu.</div>
-      <div class="tp prod" style="top: 112px; left: 870px;"><span class="dot"></span>first auto</div>
+      <!-- sub-col C (870): Cond. acc. (above) + RDV pédago (below) -->
+      <div class="sub-label" style="top: 56px; left: 874px;">🚙 Cond. acc.</div>
+      <div class="tp prod" style="top: 74px; left: 870px;"><span class="dot"></span>first manu.</div>
+      <div class="tp prod" style="top: 104px; left: 870px;"><span class="dot"></span>first auto</div>
 
-      <div class="sub-label" style="top: 224px; left: 874px;">🎓 RDV pédago</div>
-      <div class="tp prod" style="top: 242px; left: 870px;"><span class="dot"></span>manuelle</div>
-      <div class="tp prod" style="top: 276px; left: 870px;"><span class="dot"></span>automatique</div>
+      <div class="sub-label" style="top: 268px; left: 874px;">🎓 RDV pédago</div>
+      <div class="tp prod" style="top: 286px; left: 870px;"><span class="dot"></span>manuelle</div>
+      <div class="tp prod" style="top: 316px; left: 870px;"><span class="dot"></span>automatique</div>
 
       <!-- PHASE 5: CHECKOUT (x: 980-1210, width 230) -->
       <div class="phase-col chk" style="left: 980px; width: 230px;">
@@ -411,29 +414,29 @@
         <div class="col-label"><div class="num">5</div>Checkout<span class="cnt">· 14</span></div>
       </div>
 
-      <!-- sub-col A (990): 2 groups × 4 -->
-      <div class="sub-label" style="top: 60px; left: 994px;">🛒 Complet manu.</div>
-      <div class="tp chk" style="top: 78px; left: 990px;"><span class="dot"></span>standard</div>
-      <div class="tp chk" style="top: 112px; left: 990px;"><span class="dot"></span>sans-code</div>
-      <div class="tp chk" style="top: 146px; left: 990px;"><span class="dot"></span>sans-code-lead</div>
-      <div class="tp chk" style="top: 180px; left: 990px;"><span class="dot"></span>revolut</div>
+      <!-- sub-col A (990): Complet manu (above) + Complet auto (below) -->
+      <div class="sub-label" style="top: 56px; left: 994px;">🛒 Complet manu.</div>
+      <div class="tp chk" style="top: 74px; left: 990px;"><span class="dot"></span>standard</div>
+      <div class="tp chk" style="top: 104px; left: 990px;"><span class="dot"></span>sans-code</div>
+      <div class="tp chk" style="top: 134px; left: 990px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp chk" style="top: 164px; left: 990px;"><span class="dot"></span>revolut</div>
 
-      <div class="sub-label" style="top: 254px; left: 994px;">🛒 Complet auto</div>
-      <div class="tp chk" style="top: 272px; left: 990px;"><span class="dot"></span>standard</div>
-      <div class="tp chk" style="top: 306px; left: 990px;"><span class="dot"></span>sans-code</div>
-      <div class="tp chk" style="top: 340px; left: 990px;"><span class="dot"></span>sans-code-lead</div>
-      <div class="tp chk" style="top: 374px; left: 990px;"><span class="dot"></span>revolut</div>
+      <div class="sub-label" style="top: 268px; left: 994px;">🛒 Complet auto</div>
+      <div class="tp chk" style="top: 286px; left: 990px;"><span class="dot"></span>standard</div>
+      <div class="tp chk" style="top: 316px; left: 990px;"><span class="dot"></span>sans-code</div>
+      <div class="tp chk" style="top: 346px; left: 990px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp chk" style="top: 376px; left: 990px;"><span class="dot"></span>revolut</div>
 
-      <!-- sub-col B (1100): 3 heures + 3 autres -->
-      <div class="sub-label" style="top: 60px; left: 1104px;">🛒 Heures</div>
-      <div class="tp chk" style="top: 78px; left: 1100px;"><span class="dot"></span>pack-5h</div>
-      <div class="tp chk" style="top: 112px; left: 1100px;"><span class="dot"></span>pack-10h</div>
-      <div class="tp chk" style="top: 146px; left: 1100px;"><span class="dot"></span>pack-20h</div>
+      <!-- sub-col B (1100): Heures (above) + Autres (below) -->
+      <div class="sub-label" style="top: 56px; left: 1104px;">🛒 Heures</div>
+      <div class="tp chk" style="top: 74px; left: 1100px;"><span class="dot"></span>pack-5h</div>
+      <div class="tp chk" style="top: 104px; left: 1100px;"><span class="dot"></span>pack-10h</div>
+      <div class="tp chk" style="top: 134px; left: 1100px;"><span class="dot"></span>pack-20h</div>
 
-      <div class="sub-label" style="top: 254px; left: 1104px;">🛒 Autres</div>
-      <div class="tp chk" style="top: 272px; left: 1100px;"><span class="dot"></span>cond. acc.</div>
-      <div class="tp chk" style="top: 306px; left: 1100px;"><span class="dot"></span>RDV pédago</div>
-      <div class="tp chk" style="top: 340px; left: 1100px;"><span class="dot"></span>casa régional</div>
+      <div class="sub-label" style="top: 268px; left: 1104px;">🛒 Autres</div>
+      <div class="tp chk" style="top: 286px; left: 1100px;"><span class="dot"></span>cond. acc.</div>
+      <div class="tp chk" style="top: 316px; left: 1100px;"><span class="dot"></span>RDV pédago</div>
+      <div class="tp chk" style="top: 346px; left: 1100px;"><span class="dot"></span>casa régional</div>
 
       <!-- TERMINAL: SALES (right) -->
       <div class="endpoint sales" style="top: 50%; right: 12px; transform: translateY(-50%);">
@@ -459,9 +462,8 @@
 
 <script>
 const svg = document.getElementById('mapSvg');
-const H = 520;
-const cy = 260;        // endpoints vertical center
-const spineY = 470;    // spine runs along the bottom, under all phase blocks
+const H = 480;
+const cy = 235;        // spine vertical center (sits in the empty gutter between above/below tps)
 const startX = 90;
 const endX = 1230;
 
@@ -475,24 +477,18 @@ const phases = [
 ];
 
 function drawSpine() {
-  // Start at prospect (y=260) → curve down to spineY → cross all phases at y=spineY with subtle wobble → curve up to sales
+  // Gentle wobble at center y=235 (band ±15, items above end at y=210, items below start at y=265)
   let d = `M ${startX} ${cy}`;
-  // Dive down from prospect to spine band
-  d += ` C ${startX + 30} ${cy}, ${startX + 30} ${spineY}, ${startX + 70} ${spineY}`;
-
-  // Cross each phase center with a gentle vertical wobble (±15)
-  let prevX = startX + 70;
+  let prevX = startX;
   for (let i=0; i<phases.length; i++) {
     const p = phases[i];
-    const wobble = (i % 2 === 0) ? -12 : 12;
+    const wobble = (i % 2 === 0) ? -15 : 15;
     const midX = (prevX + p.x) / 2;
-    d += ` C ${midX} ${spineY + wobble}, ${midX} ${spineY - wobble}, ${p.x} ${spineY}`;
+    d += ` C ${midX} ${cy + wobble}, ${midX} ${cy - wobble}, ${p.x} ${cy}`;
     prevX = p.x;
   }
-
-  // After last phase, glide horizontal then climb back up to sales endpoint
-  d += ` C ${prevX + 40} ${spineY}, ${endX - 30} ${spineY}, ${endX - 30} ${cy}`;
-  d += ` L ${endX} ${cy}`;
+  const midX = (prevX + endX) / 2;
+  d += ` C ${midX} ${cy + 15}, ${midX} ${cy - 15}, ${endX} ${cy}`;
 
   const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
   defs.innerHTML = `
@@ -528,13 +524,22 @@ function drawSpine() {
   for (const p of phases) {
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx', p.x);
-    c.setAttribute('cy', spineY);
+    c.setAttribute('cy', cy);
     c.setAttribute('r', 10);
     c.setAttribute('fill', '#fff');
     c.setAttribute('stroke', p.color);
     c.setAttribute('stroke-width', '4');
     svg.appendChild(c);
   }
+
+  // Start dot (prospect)
+  const sd = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  sd.setAttribute('cx', startX); sd.setAttribute('cy', cy); sd.setAttribute('r', 7); sd.setAttribute('fill', '#1a1916');
+  svg.appendChild(sd);
+  // End dot (sales)
+  const ed = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  ed.setAttribute('cx', endX); ed.setAttribute('cy', cy); ed.setAttribute('r', 12); ed.setAttribute('fill', '#ec4899');
+  svg.appendChild(ed);
 }
 
 drawSpine();
