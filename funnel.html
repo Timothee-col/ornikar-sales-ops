@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Touchpoints Sales · Ornikar</title>
+<title>Carte parcours Sales · Ornikar</title>
 <style>
   :root {
-    --bg: #f7f6f3;
+    --bg: #faf9f5;
     --surface: #ffffff;
-    --border: #e4e2dc;
+    --border: #e6e3dc;
     --text: #1a1916;
     --muted: #6b6960;
     --hint: #a8a69f;
@@ -18,90 +18,228 @@
     --prod: #d97706;
     --chk:  #dc2626;
     --tel:  #16a34a;
-    --radius: 8px;
-    --radius-lg: 12px;
+    --sales:#ec4899;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
 
-  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 20px 32px; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  header .left { display: flex; align-items: baseline; gap: 16px; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 18px 28px; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
-  header span { font-size: 12px; color: var(--muted); }
+  header .left span { font-size: 12px; color: var(--muted); margin-left: 12px; }
   header nav a { font-size: 12px; color: var(--muted); text-decoration: none; margin-left: 16px; }
   header nav a:hover { color: var(--shop); }
 
-  .container { max-width: 1400px; margin: 0 auto; padding: 28px 32px; display: flex; flex-direction: column; gap: 28px; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 24px 24px 80px; }
 
-  .intro { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 22px; font-size: 13px; color: var(--muted); line-height: 1.6; }
-  .intro b { color: var(--text); }
-  .intro .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
-  .intro .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text); }
-  .intro .legend-dot { width: 14px; height: 14px; border-radius: 4px; }
-
-  /* Phase block */
-  .phase { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
-  .phase-head { display: flex; align-items: center; gap: 14px; padding: 16px 22px; border-bottom: 1px solid var(--border); background: #faf9f6; }
-  .phase-num { width: 32px; height: 32px; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
-  .phase-title { flex: 1; }
-  .phase-title h2 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
-  .phase-title p { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .phase-count { font-size: 11px; color: var(--muted); background: var(--bg); padding: 4px 10px; border-radius: 20px; font-variant-numeric: tabular-nums; }
-
-  .phase-body { padding: 18px 22px; }
-
-  .group { margin-bottom: 18px; }
-  .group:last-child { margin-bottom: 0; }
-  .group-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
-
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
-
-  .tp {
+  /* === Top journey strip === */
+  .journey-strip {
+    background: linear-gradient(135deg, #fff 0%, #faf9f5 100%);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    background: #fff;
-    border-left-width: 3px;
-    transition: all .15s;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-height: 70px;
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
   }
-  .tp:hover { box-shadow: 0 2px 8px rgba(0,0,0,.05); transform: translateY(-1px); }
-  .tp-loc { font-size: 12px; font-weight: 600; color: var(--text); font-family: ui-monospace, 'SF Mono', Menlo, monospace; word-break: break-all; }
-  .tp-ctx { font-size: 11px; color: var(--muted); }
-  .tp-cta { font-size: 11px; color: var(--text); display: flex; align-items: center; gap: 4px; margin-top: 2px; }
-  .tp-cta::before { content: '→'; color: var(--hint); }
-  .tp-dest { font-size: 10px; color: var(--hint); font-style: italic; margin-top: 2px; }
-  .tp-mult { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 10px; background: var(--bg); color: var(--muted); align-self: flex-start; }
+  .journey-title { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 18px; }
+  .journey-svg { width: 100%; height: 130px; display: block; }
 
-  .tp.site         { border-left-color: var(--site); }
-  .tp.acq          { border-left-color: var(--acq); }
-  .tp.shop         { border-left-color: var(--shop); }
-  .tp.prod         { border-left-color: var(--prod); }
-  .tp.chk          { border-left-color: var(--chk); }
-  .tp.tel          { border-left-color: var(--tel); }
+  /* === Map canvas === */
+  .map-canvas {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+  }
 
-  .phase.site         .phase-num { background: var(--site); }
-  .phase.acq          .phase-num { background: var(--acq); }
-  .phase.shop         .phase-num { background: var(--shop); }
-  .phase.prod         .phase-num { background: var(--prod); }
-  .phase.chk          .phase-num { background: var(--chk); }
-  .phase.tel          .phase-num { background: var(--tel); }
+  .map-inner {
+    position: relative;
+    width: 100%;
+    min-height: 2400px;
+  }
 
-  .arrow-down { text-align: center; font-size: 18px; color: var(--hint); padding: 4px 0; }
+  .map-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
 
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 0; }
-  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; }
-  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
-  .stat-value { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; }
-  .stat-sub { font-size: 11px; color: var(--hint); margin-top: 3px; }
+  /* Phase blocks (overlay) */
+  .phase-zone {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .phase-zone .phase-bg {
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    opacity: .06;
+    pointer-events: none;
+  }
+  .phase-zone .phase-label {
+    position: absolute;
+    top: 18px;
+    left: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .02em;
+    pointer-events: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 14px 6px 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .phase-label .phase-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .phase-label .phase-cnt {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-left: 6px;
+  }
 
-  @media (max-width: 768px) {
-    .container { padding: 16px; }
-    .stats { grid-template-columns: repeat(2, 1fr); }
-    .cards { grid-template-columns: 1fr; }
+  /* Touchpoint stations */
+  .tp {
+    position: absolute;
+    z-index: 3;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text);
+    box-shadow: 0 2px 6px rgba(0,0,0,.05);
+    transition: all .15s;
+    cursor: default;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+  }
+  .tp:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,.1);
+    z-index: 10;
+  }
+  .tp .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .tp .tp-icon {
+    font-size: 14px;
+    margin-right: 2px;
+  }
+  .tp small {
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 10.5px;
+    margin-left: 4px;
+  }
+  .tp.major {
+    font-size: 13px;
+    padding: 10px 16px;
+    font-weight: 600;
+  }
+  .tp.terminal {
+    background: linear-gradient(135deg, var(--sales) 0%, #f97316 100%);
+    color: #fff;
+    border: none;
+    padding: 16px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(236, 72, 153, .35);
+  }
+  .tp.terminal .dot { background: #fff; width: 12px; height: 12px; }
+
+  .tp.site .dot { background: var(--site); }
+  .tp.acq .dot  { background: var(--acq); }
+  .tp.shop .dot { background: var(--shop); }
+  .tp.prod .dot { background: var(--prod); }
+  .tp.chk .dot  { background: var(--chk); }
+  .tp.tel .dot  { background: var(--tel); }
+  .tp.site { border-color: rgba(124, 58, 237, .25); }
+  .tp.acq  { border-color: rgba(13, 148, 136, .25); }
+  .tp.shop { border-color: rgba(37, 99, 235, .25); }
+  .tp.prod { border-color: rgba(217, 119, 6, .25); }
+  .tp.chk  { border-color: rgba(220, 38, 38, .25); }
+  .tp.tel  { border-color: rgba(22, 163, 74, .25); }
+
+  .phase.site .phase-icon { background: var(--site); }
+  .phase.acq  .phase-icon { background: var(--acq); }
+  .phase.shop .phase-icon { background: var(--shop); }
+  .phase.prod .phase-icon { background: var(--prod); }
+  .phase.chk  .phase-icon { background: var(--chk); }
+  .phase.tel  .phase-icon { background: var(--tel); }
+  .phase.site .phase-bg { background: var(--site); }
+  .phase.acq  .phase-bg { background: var(--acq); }
+  .phase.shop .phase-bg { background: var(--shop); }
+  .phase.prod .phase-bg { background: var(--prod); }
+  .phase.chk  .phase-bg { background: var(--chk); }
+  .phase.tel  .phase-bg { background: var(--tel); }
+
+  /* Endpoints */
+  .endpoint {
+    position: absolute;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 2px solid var(--text);
+    border-radius: 100px;
+    padding: 10px 22px 10px 14px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  }
+  .endpoint .ep-icon {
+    width: 36px; height: 36px;
+    background: var(--text);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  /* Inline legend at top */
+  .legend-bar { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+  .map-foot {
+    padding: 18px 32px;
+    border-top: 1px solid var(--border);
+    background: #faf9f5;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .map-foot b { color: var(--text); }
+
+  @media (max-width: 980px) {
+    .map-inner { transform: scale(.7); transform-origin: top left; width: 142%; }
   }
 </style>
 </head>
@@ -109,8 +247,8 @@
 
 <header>
   <div class="left">
-    <h1>Touchpoints Sales — Cartographie des CTAs</h1>
-    <span>Toutes les occasions de parler à un conseiller</span>
+    <h1>Carte parcours Sales</h1>
+    <span>De la découverte au pickup téléphonique — toutes les occasions de parler à un conseiller</span>
   </div>
   <nav>
     <a href="index.html">Analyse data →</a>
@@ -119,353 +257,351 @@
 
 <div class="container">
 
-  <div class="intro">
-    Cartographie de <b>toutes les surfaces</b> où un prospect peut déclencher un échange avec un conseiller sales — du site Ornikar à la boutique en passant par les emails. Du haut vers le bas : parcours d'acquisition <b>← amont</b> vers <b>aval →</b>.
-    <div class="legend">
-      <div class="legend-item"><span class="legend-dot" style="background:var(--site)"></span> Site ornikar.com</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--acq)"></span> Acquisition (email/widget)</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--shop)"></span> Shop (landing)</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--prod)"></span> Page produit</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--chk)"></span> Checkout</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--tel)"></span> Téléphone direct</div>
-    </div>
+  <!-- === Journey strip (overview) === -->
+  <div class="journey-strip">
+    <div class="journey-title">Vue d'ensemble du parcours</div>
+    <svg class="journey-svg" viewBox="0 0 1340 130" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="lineGrad" x1="0" x2="1">
+          <stop offset="0"   stop-color="#7c3aed"/>
+          <stop offset="0.2" stop-color="#0d9488"/>
+          <stop offset="0.4" stop-color="#2563eb"/>
+          <stop offset="0.6" stop-color="#d97706"/>
+          <stop offset="0.8" stop-color="#dc2626"/>
+          <stop offset="1"   stop-color="#ec4899"/>
+        </linearGradient>
+      </defs>
+      <!-- Main path -->
+      <path d="M 60 65 Q 200 65 240 65 T 420 65 T 600 65 T 780 65 T 960 65 T 1140 65 T 1280 65"
+            stroke="url(#lineGrad)" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <!-- Start node -->
+      <g transform="translate(50, 65)">
+        <circle r="22" fill="#1a1916"/>
+        <text y="6" text-anchor="middle" fill="#fff" font-size="20">👤</text>
+        <text y="50" text-anchor="middle" font-size="11" fill="#6b6960" font-weight="600">Prospect</text>
+      </g>
+      <!-- Stations -->
+      <g class="stations">
+        <!-- Phase 1: Site -->
+        <g transform="translate(240, 65)">
+          <circle r="20" fill="#fff" stroke="#7c3aed" stroke-width="3"/>
+          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#7c3aed">1</text>
+          <text y="-32" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="700">SITE</text>
+          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">10 surfaces</text>
+        </g>
+        <!-- Phase 2: Acq -->
+        <g transform="translate(420, 65)">
+          <circle r="20" fill="#fff" stroke="#0d9488" stroke-width="3"/>
+          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#0d9488">2</text>
+          <text y="-32" text-anchor="middle" font-size="11" fill="#0d9488" font-weight="700">ACQUISITION</text>
+          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">6 touchpoints</text>
+        </g>
+        <!-- Phase 3: Shop -->
+        <g transform="translate(600, 65)">
+          <circle r="20" fill="#fff" stroke="#2563eb" stroke-width="3"/>
+          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb">3</text>
+          <text y="-32" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="700">SHOP</text>
+          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">1 landing</text>
+        </g>
+        <!-- Phase 4: Product -->
+        <g transform="translate(780, 65)">
+          <circle r="20" fill="#fff" stroke="#d97706" stroke-width="3"/>
+          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#d97706">4</text>
+          <text y="-32" text-anchor="middle" font-size="11" fill="#d97706" font-weight="700">PRODUIT</text>
+          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">18 pages</text>
+        </g>
+        <!-- Phase 5: Checkout -->
+        <g transform="translate(960, 65)">
+          <circle r="20" fill="#fff" stroke="#dc2626" stroke-width="3"/>
+          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#dc2626">5</text>
+          <text y="-32" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="700">CHECKOUT</text>
+          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">14 variantes</text>
+        </g>
+        <!-- Phase 6: Tel -->
+        <g transform="translate(1140, 65)">
+          <circle r="20" fill="#fff" stroke="#16a34a" stroke-width="3"/>
+          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#16a34a">6</text>
+          <text y="-32" text-anchor="middle" font-size="11" fill="#16a34a" font-weight="700">TÉL DIRECT</text>
+          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">2 numéros</text>
+        </g>
+      </g>
+      <!-- End node -->
+      <g transform="translate(1290, 65)">
+        <circle r="26" fill="#ec4899"/>
+        <text y="7" text-anchor="middle" fill="#fff" font-size="22">🎧</text>
+        <text y="55" text-anchor="middle" font-size="11" fill="#ec4899" font-weight="700">SALES</text>
+      </g>
+    </svg>
   </div>
 
-  <!-- Stats -->
-  <div class="stats">
-    <div class="stat"><div class="stat-label">Surfaces totales</div><div class="stat-value">6</div><div class="stat-sub">phases du parcours</div></div>
-    <div class="stat"><div class="stat-label">Touchpoints uniques</div><div class="stat-value">50+</div><div class="stat-sub">placements de CTA</div></div>
-    <div class="stat"><div class="stat-label">Destinations</div><div class="stat-value">3</div><div class="stat-sub">Survicate / téléphone / chat</div></div>
-    <div class="stat"><div class="stat-label">Pages produit</div><div class="stat-value">18</div><div class="stat-sub">+ 14 variantes checkout</div></div>
-  </div>
+  <!-- === Detailed map === -->
+  <div class="map-canvas">
+    <div class="map-inner" id="mapInner">
+      <svg class="map-svg" id="mapSvg" viewBox="0 0 1340 2400" preserveAspectRatio="xMidYMin meet"></svg>
 
-  <!-- PHASE 1: SITE -->
-  <div class="phase site">
-    <div class="phase-head">
-      <div class="phase-num">1</div>
-      <div class="phase-title">
-        <h2>Site ornikar.com — Découverte</h2>
-        <p>CTAs « Contacter un conseiller » placés sur le site éditorial avant l'entrée en boutique</p>
+      <!-- All overlays are positioned absolute in % of mapInner -->
+
+      <!-- ENTRY -->
+      <div class="endpoint" style="top: 20px; left: 50%; transform: translateX(-50%); border-color: var(--muted);">
+        <div class="ep-icon">👤</div>
+        Prospect arrive
       </div>
-      <div class="phase-count">10 surfaces</div>
-    </div>
-    <div class="phase-body">
 
-      <div class="group">
-        <div class="group-label">Présent sur toutes les pages (nav + footer)</div>
-        <div class="cards">
-          <div class="tp site">
-            <div class="tp-loc">Header / nav</div>
-            <div class="tp-ctx">Présent dans la barre de navigation de toutes les pages permis</div>
-            <div class="tp-cta">Contacter un conseiller</div>
-            <div class="tp-dest">→ formulaire Survicate</div>
-          </div>
-          <div class="tp site">
-            <div class="tp-loc">Footer "Aide & contact"</div>
-            <div class="tp-ctx">Lien en pied de page, accessible partout</div>
-            <div class="tp-cta">Contacter un conseiller</div>
-            <div class="tp-dest">→ formulaire Survicate</div>
-          </div>
+      <!-- PHASE 1: SITE -->
+      <div class="phase-zone phase site" style="top: 110px; left: 24px; right: 24px; height: 380px;">
+        <div class="phase-bg"></div>
+        <div class="phase-label">
+          <div class="phase-icon">1</div>
+          Site ornikar.com
+          <span class="phase-cnt">· 10 surfaces</span>
+        </div>
+      </div>
+      <!-- Site touchpoints -->
+      <div class="tp site major" style="top: 175px; left: 60px;"><span class="dot"></span><span class="tp-icon">🧭</span>Header / Nav (global)</div>
+      <div class="tp site major" style="top: 175px; right: 60px;"><span class="dot"></span><span class="tp-icon">📋</span>Footer (global)</div>
+
+      <div class="tp site" style="top: 245px; left: 80px;"><span class="dot"></span>/permis <small>×3 in-page</small></div>
+      <div class="tp site" style="top: 245px; left: 380px;"><span class="dot"></span>/conduite-accompagnee</div>
+      <div class="tp site" style="top: 245px; left: 660px;"><span class="dot"></span>/cpf <small>(financement)</small></div>
+      <div class="tp site" style="top: 245px; right: 80px;"><span class="dot"></span>/permis/types/b</div>
+
+      <div class="tp site" style="top: 310px; left: 80px;"><span class="dot"></span>/code/examen</div>
+      <div class="tp site" style="top: 310px; left: 320px;"><span class="dot"></span>/permis/demarches/prix/pas-cher</div>
+      <div class="tp tel"  style="top: 310px; left: 680px;"><span class="dot"></span><span class="tp-icon">📞</span>/choisir-auto-ecole-enfant</div>
+      <div class="tp tel"  style="top: 310px; right: 80px;"><span class="dot"></span><span class="tp-icon">📞</span>/stage</div>
+
+      <div class="tp" style="top: 400px; left: 50%; transform: translateX(-50%); background: #f5f3ed; border-style: dashed;">
+        <span style="color: var(--muted)">↓ formulaire callback Survicate</span>
+      </div>
+
+      <!-- PHASE 2: ACQUISITION -->
+      <div class="phase-zone phase acq" style="top: 530px; left: 24px; right: 24px; height: 280px;">
+        <div class="phase-bg"></div>
+        <div class="phase-label">
+          <div class="phase-icon">2</div>
+          Acquisition (email / widgets)
+          <span class="phase-cnt">· 6 touchpoints</span>
+        </div>
+      </div>
+      <div class="tp acq major" style="top: 600px; left: 80px;"><span class="dot"></span><span class="tp-icon">✉️</span>emailcrm <small>(body)</small></div>
+      <div class="tp acq major" style="top: 600px; left: 360px;"><span class="dot"></span><span class="tp-icon">✉️</span>emailcrmheader</div>
+      <div class="tp acq major" style="top: 600px; right: 80px;"><span class="dot"></span><span class="tp-icon">💬</span>chatbot_support</div>
+
+      <div class="tp acq" style="top: 685px; left: 100px;"><span class="dot"></span><span class="tp-icon">🏠</span>home_widget</div>
+      <div class="tp acq" style="top: 685px; left: 380px;"><span class="dot"></span><span class="tp-icon">🚗</span>permis_widget</div>
+      <div class="tp acq" style="top: 685px; right: 100px;"><span class="dot"></span><span class="tp-icon">🗂️</span>infocards</div>
+
+      <!-- PHASE 3: SHOP LANDING -->
+      <div class="phase-zone phase shop" style="top: 840px; left: 24px; right: 24px; height: 150px;">
+        <div class="phase-bg"></div>
+        <div class="phase-label">
+          <div class="phase-icon">3</div>
+          Boutique — Landing
+          <span class="phase-cnt">· 1 surface</span>
+        </div>
+      </div>
+      <div class="tp shop major" style="top: 920px; left: 50%; transform: translateX(-50%); padding: 14px 28px; font-size: 14px;">
+        <span class="dot"></span><span class="tp-icon">🛍️</span>shop <small>(landing boutique)</small>
+      </div>
+
+      <!-- PHASE 4: PRODUCT PAGES -->
+      <div class="phase-zone phase prod" style="top: 1020px; left: 24px; right: 24px; height: 500px;">
+        <div class="phase-bg"></div>
+        <div class="phase-label">
+          <div class="phase-icon">4</div>
+          Pages produit
+          <span class="phase-cnt">· 18 produits</span>
         </div>
       </div>
 
-      <div class="group">
-        <div class="group-label">CTAs in-page (corps de page)</div>
-        <div class="cards">
-          <div class="tp site">
-            <div class="tp-loc">/permis</div>
-            <div class="tp-ctx">Landing page permis</div>
-            <span class="tp-mult">×3 dans la page</span>
-            <div class="tp-cta">Contacter un conseiller</div>
-            <div class="tp-dest">→ Survicate</div>
-          </div>
-          <div class="tp site">
-            <div class="tp-loc">/conduite-accompagnee</div>
-            <div class="tp-ctx">Page conduite accompagnée</div>
-            <div class="tp-cta">Contacter un conseiller</div>
-            <div class="tp-dest">→ Survicate</div>
-          </div>
-          <div class="tp site">
-            <div class="tp-loc">/permis/demarches/financer-permis/cpf</div>
-            <div class="tp-ctx">Page financement CPF</div>
-            <div class="tp-cta">Contacter un conseiller</div>
-            <div class="tp-dest">→ Survicate</div>
-          </div>
-          <div class="tp tel">
-            <div class="tp-loc">/choisir-auto-ecole-enfant</div>
-            <div class="tp-ctx">Page parents / enfant</div>
-            <span class="tp-mult">×5 numéros affichés</span>
-            <div class="tp-cta">Appeler un conseiller — 01 86 65 54 22</div>
-            <div class="tp-dest">→ téléphone direct</div>
-          </div>
-          <div class="tp site">
-            <div class="tp-loc">/permis/types/b</div>
-            <div class="tp-ctx">Page permis B</div>
-            <div class="tp-cta">Contacter un conseiller</div>
-            <div class="tp-dest">→ Survicate (menu)</div>
-          </div>
-          <div class="tp site">
-            <div class="tp-loc">/code/examen</div>
-            <div class="tp-ctx">Page examen du code</div>
-            <div class="tp-cta">Contacter un conseiller</div>
-            <div class="tp-dest">→ Survicate (menu)</div>
-          </div>
-          <div class="tp site">
-            <div class="tp-loc">/permis/demarches/prix/pas-cher</div>
-            <div class="tp-ctx">Page tarif</div>
-            <div class="tp-cta">Contacter un conseiller</div>
-            <div class="tp-dest">→ Survicate (footer)</div>
-          </div>
-          <div class="tp tel">
-            <div class="tp-loc">/stage</div>
-            <div class="tp-ctx">Stage de récupération de points</div>
-            <div class="tp-cta">Contactez-nous — 09 70 70 50 61</div>
-            <div class="tp-dest">→ téléphone direct</div>
-          </div>
+      <!-- Product: Pack permis complet -->
+      <div class="tp prod major" style="top: 1090px; left: 80px;"><span class="dot"></span>📦 Pack permis complet (manuel)</div>
+      <div class="tp prod" style="top: 1145px; left: 80px;"><span class="dot"></span>+ standard</div>
+      <div class="tp prod" style="top: 1145px; left: 200px;"><span class="dot"></span>+ sans-code</div>
+      <div class="tp prod" style="top: 1190px; left: 80px;"><span class="dot"></span>+ sans-code-lead</div>
+      <div class="tp prod" style="top: 1190px; left: 200px;"><span class="dot"></span>+ revolut</div>
+
+      <!-- Product: Pack auto -->
+      <div class="tp prod major" style="top: 1090px; left: 410px;"><span class="dot"></span>📦 Pack permis complet (auto)</div>
+      <div class="tp prod" style="top: 1145px; left: 410px;"><span class="dot"></span>+ standard</div>
+      <div class="tp prod" style="top: 1145px; left: 540px;"><span class="dot"></span>+ sans-code</div>
+      <div class="tp prod" style="top: 1190px; left: 410px;"><span class="dot"></span>+ sans-code-lead</div>
+      <div class="tp prod" style="top: 1190px; left: 540px;"><span class="dot"></span>+ revolut</div>
+
+      <!-- Product: heures -->
+      <div class="tp prod major" style="top: 1090px; right: 80px;"><span class="dot"></span>⏱️ Packs heures</div>
+      <div class="tp prod" style="top: 1145px; right: 200px;"><span class="dot"></span>pack-5h</div>
+      <div class="tp prod" style="top: 1145px; right: 100px;"><span class="dot"></span>pack-10h</div>
+      <div class="tp prod" style="top: 1190px; right: 180px;"><span class="dot"></span>pack-20h</div>
+      <div class="tp prod" style="top: 1190px; right: 60px;"><span class="dot"></span>+ versions auto</div>
+
+      <!-- Product: conduite & rdv -->
+      <div class="tp prod major" style="top: 1300px; left: 80px;"><span class="dot"></span>🚙 Conduite accompagnée</div>
+      <div class="tp prod" style="top: 1355px; left: 80px;"><span class="dot"></span>manuelle</div>
+      <div class="tp prod" style="top: 1355px; left: 200px;"><span class="dot"></span>boîte auto</div>
+
+      <div class="tp prod major" style="top: 1300px; left: 410px;"><span class="dot"></span>🎓 RDV pédagogiques</div>
+      <div class="tp prod" style="top: 1355px; left: 410px;"><span class="dot"></span>manuelle</div>
+      <div class="tp prod" style="top: 1355px; left: 530px;"><span class="dot"></span>automatique</div>
+
+      <div class="tp prod major" style="top: 1300px; right: 80px;"><span class="dot"></span>📍 Régional CASA</div>
+      <div class="tp prod" style="top: 1355px; right: 180px;"><span class="dot"></span>nord-france</div>
+      <div class="tp prod" style="top: 1355px; right: 60px;"><span class="dot"></span>nord-france auto</div>
+
+      <!-- PHASE 5: CHECKOUT -->
+      <div class="phase-zone phase chk" style="top: 1550px; left: 24px; right: 24px; height: 360px;">
+        <div class="phase-bg"></div>
+        <div class="phase-label">
+          <div class="phase-icon">5</div>
+          Checkout
+          <span class="phase-cnt">· 14 variantes</span>
         </div>
       </div>
 
-    </div>
-  </div>
+      <div class="tp chk major" style="top: 1620px; left: 80px;"><span class="dot"></span>🛒 Pack complet (manuel)</div>
+      <div class="tp chk" style="top: 1675px; left: 80px;"><span class="dot"></span>standard</div>
+      <div class="tp chk" style="top: 1675px; left: 200px;"><span class="dot"></span>sans-code</div>
+      <div class="tp chk" style="top: 1720px; left: 80px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp chk" style="top: 1720px; left: 200px;"><span class="dot"></span>revolut</div>
 
-  <div class="arrow-down">↓</div>
+      <div class="tp chk major" style="top: 1620px; left: 410px;"><span class="dot"></span>🛒 Pack complet (auto)</div>
+      <div class="tp chk" style="top: 1675px; left: 410px;"><span class="dot"></span>standard</div>
+      <div class="tp chk" style="top: 1675px; left: 540px;"><span class="dot"></span>sans-code</div>
+      <div class="tp chk" style="top: 1720px; left: 410px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp chk" style="top: 1720px; left: 540px;"><span class="dot"></span>revolut</div>
 
-  <!-- PHASE 2: ACQUISITION (EMAIL/WIDGETS) -->
-  <div class="phase acq">
-    <div class="phase-head">
-      <div class="phase-num">2</div>
-      <div class="phase-title">
-        <h2>Acquisition — Email CRM &amp; widgets</h2>
-        <p>Surfaces de contact en dehors du parcours produit (campagnes outbound, widgets persistants)</p>
-      </div>
-      <div class="phase-count">6 touchpoints</div>
-    </div>
-    <div class="phase-body">
+      <div class="tp chk major" style="top: 1620px; right: 80px;"><span class="dot"></span>🛒 Heures + autres</div>
+      <div class="tp chk" style="top: 1675px; right: 180px;"><span class="dot"></span>pack-5h/10h/20h</div>
+      <div class="tp chk" style="top: 1675px; right: 60px;"><span class="dot"></span>conduite acc.</div>
+      <div class="tp chk" style="top: 1720px; right: 180px;"><span class="dot"></span>RDV pédago</div>
+      <div class="tp chk" style="top: 1720px; right: 60px;"><span class="dot"></span>CASA régional</div>
 
-      <div class="group">
-        <div class="group-label">Campagnes email outbound</div>
-        <div class="cards">
-          <div class="tp acq">
-            <div class="tp-loc">emailcrm</div>
-            <div class="tp-ctx">Body d'un email CRM</div>
-            <div class="tp-cta">CTA dans le contenu de l'email</div>
-            <div class="tp-dest">→ landing avec callback pre-rempli</div>
-          </div>
-          <div class="tp acq">
-            <div class="tp-loc">emailcrmheader</div>
-            <div class="tp-ctx">Header / haut d'un email CRM</div>
-            <div class="tp-cta">CTA en en-tête d'email</div>
-            <div class="tp-dest">→ landing callback</div>
-          </div>
+      <!-- PHASE 6: TEL -->
+      <div class="phase-zone phase tel" style="top: 1940px; left: 24px; right: 24px; height: 170px;">
+        <div class="phase-bg"></div>
+        <div class="phase-label">
+          <div class="phase-icon">6</div>
+          Numéros directs (hors funnel WCB)
+          <span class="phase-cnt">· 2 numéros</span>
         </div>
       </div>
+      <div class="tp tel major" style="top: 2020px; left: 25%; transform: translateX(-50%);"><span class="dot"></span>📞 01 86 65 54 22 <small>(parents/enfant)</small></div>
+      <div class="tp tel major" style="top: 2020px; left: 75%; transform: translateX(-50%);"><span class="dot"></span>📞 09 70 70 50 61 <small>(stage)</small></div>
 
-      <div class="group">
-        <div class="group-label">Widgets persistants sur le site</div>
-        <div class="cards">
-          <div class="tp acq">
-            <div class="tp-loc">home_widget</div>
-            <div class="tp-ctx">Widget callback sur la home</div>
-            <div class="tp-cta">Bouton flottant / module home</div>
-            <div class="tp-dest">→ formulaire WCB</div>
-          </div>
-          <div class="tp acq">
-            <div class="tp-loc">permis_widget</div>
-            <div class="tp-ctx">Widget callback section permis</div>
-            <div class="tp-cta">Module dédié page permis</div>
-            <div class="tp-dest">→ formulaire WCB</div>
-          </div>
-          <div class="tp acq">
-            <div class="tp-loc">infocards</div>
-            <div class="tp-ctx">Cartes d'information éditoriales</div>
-            <div class="tp-cta">CTA inline dans une infocard</div>
-            <div class="tp-dest">→ formulaire WCB</div>
-          </div>
-          <div class="tp acq">
-            <div class="tp-loc">chatbot_support</div>
-            <div class="tp-ctx">Suggestion dans le chatbot support</div>
-            <div class="tp-cta">"Parler à un humain"</div>
-            <div class="tp-dest">→ formulaire WCB</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="arrow-down">↓</div>
-
-  <!-- PHASE 3: SHOP LANDING -->
-  <div class="phase shop">
-    <div class="phase-head">
-      <div class="phase-num">3</div>
-      <div class="phase-title">
-        <h2>Boutique — Landing</h2>
-        <p>Entrée principale dans la boutique en ligne (shop.ornikar.com)</p>
-      </div>
-      <div class="phase-count">1 surface</div>
-    </div>
-    <div class="phase-body">
-      <div class="cards">
-        <div class="tp shop">
-          <div class="tp-loc">shop</div>
-          <div class="tp-ctx">Page d'accueil de la boutique — avant choix produit</div>
-          <div class="tp-cta">CTA callback global</div>
-          <div class="tp-dest">→ formulaire WCB générique</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="arrow-down">↓</div>
-
-  <!-- PHASE 4: PRODUCT PAGES -->
-  <div class="phase prod">
-    <div class="phase-head">
-      <div class="phase-num">4</div>
-      <div class="phase-title">
-        <h2>Pages produit</h2>
-        <p>CTA callback sur chaque page produit — contextualisé (le sales sait quel pack le prospect regarde)</p>
-      </div>
-      <div class="phase-count">18 produits</div>
-    </div>
-    <div class="phase-body">
-
-      <div class="group">
-        <div class="group-label">Pack permis complet — boîte manuelle</div>
-        <div class="cards">
-          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet</div><div class="tp-ctx">Pack standard</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-sans-code</div><div class="tp-ctx">Sans code</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-sans-code-lead</div><div class="tp-ctx">Variante lead</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-revolut</div><div class="tp-ctx">Partenariat Revolut</div></div>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="group-label">Pack permis complet — boîte automatique</div>
-        <div class="cards">
-          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-boite-automatique</div><div class="tp-ctx">Pack standard auto</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-boite-automatique-sans-code</div><div class="tp-ctx">Auto sans code</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-boite-automatique-sans-code-lead</div><div class="tp-ctx">Auto sans code lead</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-permis-complet-boite-automatique-revolut</div><div class="tp-ctx">Auto Revolut</div></div>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="group-label">Packs heures de conduite</div>
-        <div class="cards">
-          <div class="tp prod"><div class="tp-loc">product/pack-5h</div><div class="tp-ctx">5h manuelle</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-10h</div><div class="tp-ctx">10h manuelle</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-20h</div><div class="tp-ctx">20h manuelle</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-5h-boite-automatique</div><div class="tp-ctx">5h auto</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-10h-boite-automatique</div><div class="tp-ctx">10h auto</div></div>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="group-label">Conduite accompagnée &amp; pédagogie</div>
-        <div class="cards">
-          <div class="tp prod"><div class="tp-loc">product/conduite-accompagnee-first</div><div class="tp-ctx">Conduite accompagnée manuelle</div></div>
-          <div class="tp prod"><div class="tp-loc">product/conduite-accompagnee-boite-automatique-first</div><div class="tp-ctx">Conduite accompagnée auto</div></div>
-          <div class="tp prod"><div class="tp-loc">product/rendez-vous-pedagogiques</div><div class="tp-ctx">RDV pédago manuelle</div></div>
-          <div class="tp prod"><div class="tp-loc">product/rendez-vous-pedagogiques-automatique</div><div class="tp-ctx">RDV pédago auto</div></div>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="group-label">Offres régionales</div>
-        <div class="cards">
-          <div class="tp prod"><div class="tp-loc">product/pack-permis-casa-nord-france</div><div class="tp-ctx">Pack CASA Nord France</div></div>
-          <div class="tp prod"><div class="tp-loc">product/pack-permis-boite-automatique-casa-nord-france</div><div class="tp-ctx">Pack CASA Nord France auto</div></div>
-        </div>
+      <!-- TERMINAL: SALES -->
+      <div class="endpoint" style="top: 2200px; left: 50%; transform: translateX(-50%); border-color: var(--sales); background: linear-gradient(135deg, #ec4899 0%, #f97316 100%); color: #fff; padding: 16px 32px 16px 18px; font-size: 16px; box-shadow: 0 10px 30px rgba(236,72,153,.35);">
+        <div class="ep-icon" style="background: #fff; color: var(--sales);">🎧</div>
+        Conseiller Sales
       </div>
 
     </div>
-  </div>
 
-  <div class="arrow-down">↓</div>
-
-  <!-- PHASE 5: CHECKOUT -->
-  <div class="phase chk">
-    <div class="phase-head">
-      <div class="phase-num">5</div>
-      <div class="phase-title">
-        <h2>Checkout</h2>
-        <p>CTA callback dans le tunnel d'achat — pour les prospects sur le point de payer mais avec une question</p>
-      </div>
-      <div class="phase-count">14 produits</div>
-    </div>
-    <div class="phase-body">
-
-      <div class="group">
-        <div class="group-label">Pack permis complet — checkout</div>
-        <div class="cards">
-          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-sans-code</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-sans-code-lead</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-revolut</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-boite-automatique</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-boite-automatique-sans-code</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-boite-automatique-sans-code-lead</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-complet-boite-automatique-revolut</div></div>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="group-label">Packs heures — checkout</div>
-        <div class="cards">
-          <div class="tp chk"><div class="tp-loc">checkout/pack-5h</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-10h</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-20h</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-5h-boite-automatique</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-10h-boite-automatique</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-10h-boite-automatique</div></div>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="group-label">Autres produits — checkout</div>
-        <div class="cards">
-          <div class="tp chk"><div class="tp-loc">checkout/conduite-accompagnee-first</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/conduite-accompagnee-boite-automatique-first</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/rendez-vous-pedagogiques</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-casa-nord-france</div></div>
-          <div class="tp chk"><div class="tp-loc">checkout/pack-permis-boite-automatique-casa-nord-france</div></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="arrow-down">↓</div>
-
-  <!-- PHASE 6: TELEPHONE DIRECT (out of WCB flow) -->
-  <div class="phase tel">
-    <div class="phase-head">
-      <div class="phase-num">6</div>
-      <div class="phase-title">
-        <h2>Hors funnel WCB — Numéros directs</h2>
-        <p>Le prospect peut sauter le formulaire et appeler immédiatement (hors tracking web callback)</p>
-      </div>
-      <div class="phase-count">2 numéros</div>
-    </div>
-    <div class="phase-body">
-      <div class="cards">
-        <div class="tp tel">
-          <div class="tp-loc">01 86 65 54 22</div>
-          <div class="tp-ctx">Affiché sur /choisir-auto-ecole-enfant</div>
-          <div class="tp-cta">Appel direct sans planification</div>
-        </div>
-        <div class="tp tel">
-          <div class="tp-loc">09 70 70 50 61</div>
-          <div class="tp-ctx">Affiché sur /stage (récupération de points)</div>
-          <div class="tp-cta">Appel direct sans planification</div>
-        </div>
-      </div>
+    <div class="map-foot">
+      <span><b>50+ touchpoints</b> répartis sur <b>6 phases</b> du parcours</span>
+      <span>
+        <span style="color:var(--site)">●</span> Site
+        &nbsp;<span style="color:var(--acq)">●</span> Acquisition
+        &nbsp;<span style="color:var(--shop)">●</span> Shop
+        &nbsp;<span style="color:var(--prod)">●</span> Produit
+        &nbsp;<span style="color:var(--chk)">●</span> Checkout
+        &nbsp;<span style="color:var(--tel)">●</span> Téléphone
+        &nbsp;<span style="color:var(--sales)">●</span> Sales (cible)
+      </span>
     </div>
   </div>
 
 </div>
 
+<script>
+// Draw the meandering connector lines on the SVG canvas
+const svg = document.getElementById('mapSvg');
+const W = 1340;
+
+const phases = [
+  { y: 290, color: '#7c3aed' },   // site
+  { y: 690, color: '#0d9488' },   // acq
+  { y: 930, color: '#2563eb' },   // shop
+  { y: 1240, color: '#d97706' },  // product
+  { y: 1700, color: '#dc2626' },  // checkout
+  { y: 2030, color: '#16a34a' },  // tel
+];
+const startY = 70;
+const endY = 2230;
+
+// Draw the main spine
+function drawSpine() {
+  const cx = W/2;
+  let d = `M ${cx} ${startY}`;
+  // Curve through each phase node center
+  let prevY = startY;
+  for (let i=0; i<phases.length; i++) {
+    const p = phases[i];
+    // alternate left/right wobble for visual interest
+    const wobble = (i % 2 === 0) ? -160 : 160;
+    const midY = (prevY + p.y) / 2;
+    d += ` C ${cx + wobble} ${midY}, ${cx - wobble} ${midY}, ${cx} ${p.y}`;
+    prevY = p.y;
+  }
+  // To end
+  d += ` C ${cx + 160} ${(prevY+endY)/2}, ${cx - 160} ${(prevY+endY)/2}, ${cx} ${endY}`;
+
+  // Background spine (gray, thicker)
+  const bg = document.createElementNS('http://www.w3.org/2000/svg','path');
+  bg.setAttribute('d', d);
+  bg.setAttribute('stroke', '#e6e3dc');
+  bg.setAttribute('stroke-width', '14');
+  bg.setAttribute('fill', 'none');
+  bg.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(bg);
+
+  // Gradient stroke spine
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  defs.innerHTML = `
+    <linearGradient id="spineGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"    stop-color="#1a1916"/>
+      <stop offset="0.05" stop-color="#7c3aed"/>
+      <stop offset="0.25" stop-color="#0d9488"/>
+      <stop offset="0.40" stop-color="#2563eb"/>
+      <stop offset="0.55" stop-color="#d97706"/>
+      <stop offset="0.75" stop-color="#dc2626"/>
+      <stop offset="0.88" stop-color="#16a34a"/>
+      <stop offset="1"    stop-color="#ec4899"/>
+    </linearGradient>
+  `;
+  svg.appendChild(defs);
+
+  const fg = document.createElementNS('http://www.w3.org/2000/svg','path');
+  fg.setAttribute('d', d);
+  fg.setAttribute('stroke', 'url(#spineGrad)');
+  fg.setAttribute('stroke-width', '6');
+  fg.setAttribute('fill', 'none');
+  fg.setAttribute('stroke-linecap', 'round');
+  fg.setAttribute('opacity', '0.85');
+  svg.appendChild(fg);
+
+  // Pulse dot at each phase center
+  for (const p of phases) {
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', cx);
+    c.setAttribute('cy', p.y);
+    c.setAttribute('r', 10);
+    c.setAttribute('fill', '#fff');
+    c.setAttribute('stroke', p.color);
+    c.setAttribute('stroke-width', '4');
+    svg.appendChild(c);
+  }
+
+  // Start / end dots
+  const sd = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  sd.setAttribute('cx', cx); sd.setAttribute('cy', startY); sd.setAttribute('r', 8); sd.setAttribute('fill', '#1a1916');
+  svg.appendChild(sd);
+
+  const ed = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  ed.setAttribute('cx', cx); ed.setAttribute('cy', endY); ed.setAttribute('r', 12); ed.setAttribute('fill', '#ec4899');
+  svg.appendChild(ed);
+}
+
+drawSpine();
+</script>
 </body>
 </html>
