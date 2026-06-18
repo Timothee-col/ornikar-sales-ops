@@ -66,7 +66,7 @@
   .phase-col {
     position: absolute;
     top: 40px;
-    bottom: 28px;
+    bottom: 90px;
     pointer-events: none;
     z-index: 1;
   }
@@ -284,7 +284,7 @@
           <circle r="20" fill="#fff" stroke="#0d9488" stroke-width="3"/>
           <text y="5" text-anchor="middle" font-size="13" font-weight="700" fill="#0d9488">2</text>
           <text y="-28" text-anchor="middle" font-size="10" fill="#0d9488" font-weight="700">ACQUISITION</text>
-          <text y="42" text-anchor="middle" font-size="9" fill="#6b6960">6 touchpoints</text>
+          <text y="42" text-anchor="middle" font-size="9" fill="#6b6960">5 touchpoints</text>
         </g>
         <g transform="translate(760, 55)">
           <circle r="20" fill="#fff" stroke="#2563eb" stroke-width="3"/>
@@ -345,19 +345,16 @@
       <!-- PHASE 2: ACQUISITION (x: 350-520, width 170) -->
       <div class="phase-col acq" style="left: 350px; width: 170px;">
         <div class="bg"></div>
-        <div class="col-label"><div class="num">2</div>Acquisition<span class="cnt">· 6</span></div>
+        <div class="col-label"><div class="num">2</div>Acquisition<span class="cnt">· 5</span></div>
       </div>
       <div class="sub-label" style="top: 60px; left: 364px;">Email CRM</div>
       <div class="tp acq major" style="top: 78px; left: 360px;"><span class="dot"></span>✉️ emailcrm<small>body</small></div>
       <div class="tp acq major" style="top: 116px; left: 360px;"><span class="dot"></span>✉️ emailcrmheader</div>
 
-      <div class="sub-label" style="top: 180px; left: 364px;">Widgets</div>
-      <div class="tp acq" style="top: 198px; left: 360px;"><span class="dot"></span>🏠 home_widget</div>
-      <div class="tp acq" style="top: 232px; left: 360px;"><span class="dot"></span>🚗 permis_widget</div>
-      <div class="tp acq" style="top: 266px; left: 360px;"><span class="dot"></span>🗂️ infocards</div>
-
-      <div class="sub-label" style="top: 350px; left: 364px;">Chat</div>
-      <div class="tp acq" style="top: 368px; left: 360px;"><span class="dot"></span>💬 chatbot_support</div>
+      <div class="sub-label" style="top: 200px; left: 364px;">Widgets</div>
+      <div class="tp acq" style="top: 218px; left: 360px;"><span class="dot"></span>🏠 home_widget</div>
+      <div class="tp acq" style="top: 252px; left: 360px;"><span class="dot"></span>🚗 permis_widget</div>
+      <div class="tp acq" style="top: 286px; left: 360px;"><span class="dot"></span>🗂️ infocards</div>
 
       <!-- PHASE 3: SHOP (x: 540-650, width 110) -->
       <div class="phase-col shop" style="left: 540px; width: 110px;">
@@ -463,11 +460,12 @@
 <script>
 const svg = document.getElementById('mapSvg');
 const H = 520;
-const cy = H / 2;
+const cy = 260;        // endpoints vertical center
+const spineY = 470;    // spine runs along the bottom, under all phase blocks
 const startX = 90;
 const endX = 1230;
 
-// Phase centers (x in canvas coords)
+// Phase station x positions (where each phase node sits on the spine)
 const phases = [
   { x: 225,  color: '#7c3aed' },
   { x: 435,  color: '#0d9488' },
@@ -477,17 +475,24 @@ const phases = [
 ];
 
 function drawSpine() {
+  // Start at prospect (y=260) → curve down to spineY → cross all phases at y=spineY with subtle wobble → curve up to sales
   let d = `M ${startX} ${cy}`;
-  let prevX = startX;
+  // Dive down from prospect to spine band
+  d += ` C ${startX + 30} ${cy}, ${startX + 30} ${spineY}, ${startX + 70} ${spineY}`;
+
+  // Cross each phase center with a gentle vertical wobble (±15)
+  let prevX = startX + 70;
   for (let i=0; i<phases.length; i++) {
     const p = phases[i];
-    const wobble = (i % 2 === 0) ? -40 : 40;
+    const wobble = (i % 2 === 0) ? -12 : 12;
     const midX = (prevX + p.x) / 2;
-    d += ` C ${midX} ${cy + wobble}, ${midX} ${cy - wobble}, ${p.x} ${cy}`;
+    d += ` C ${midX} ${spineY + wobble}, ${midX} ${spineY - wobble}, ${p.x} ${spineY}`;
     prevX = p.x;
   }
-  const midX = (prevX + endX) / 2;
-  d += ` C ${midX} ${cy - 40}, ${midX} ${cy + 40}, ${endX} ${cy}`;
+
+  // After last phase, glide horizontal then climb back up to sales endpoint
+  d += ` C ${prevX + 40} ${spineY}, ${endX - 30} ${spineY}, ${endX - 30} ${cy}`;
+  d += ` L ${endX} ${cy}`;
 
   const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
   defs.innerHTML = `
@@ -523,20 +528,13 @@ function drawSpine() {
   for (const p of phases) {
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('cx', p.x);
-    c.setAttribute('cy', cy);
+    c.setAttribute('cy', spineY);
     c.setAttribute('r', 10);
     c.setAttribute('fill', '#fff');
     c.setAttribute('stroke', p.color);
     c.setAttribute('stroke-width', '4');
     svg.appendChild(c);
   }
-
-  const sd = document.createElementNS('http://www.w3.org/2000/svg','circle');
-  sd.setAttribute('cx', startX); sd.setAttribute('cy', cy); sd.setAttribute('r', 7); sd.setAttribute('fill', '#1a1916');
-  svg.appendChild(sd);
-  const ed = document.createElementNS('http://www.w3.org/2000/svg','circle');
-  ed.setAttribute('cx', endX); ed.setAttribute('cy', cy); ed.setAttribute('r', 12); ed.setAttribute('fill', '#ec4899');
-  svg.appendChild(ed);
 }
 
 drawSpine();
