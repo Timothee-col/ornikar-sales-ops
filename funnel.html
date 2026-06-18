@@ -57,7 +57,7 @@
   .map-inner {
     position: relative;
     width: 100%;
-    min-height: 2400px;
+    min-height: 2120px;
   }
 
   .map-svg {
@@ -272,7 +272,7 @@
         </linearGradient>
       </defs>
       <!-- Main path -->
-      <path d="M 60 65 Q 200 65 240 65 T 420 65 T 600 65 T 780 65 T 960 65 T 1140 65 T 1280 65"
+      <path d="M 60 65 Q 200 65 260 65 T 510 65 T 760 65 T 1010 65 T 1260 65 T 1280 65"
             stroke="url(#lineGrad)" stroke-width="6" fill="none" stroke-linecap="round"/>
       <!-- Start node -->
       <g transform="translate(50, 65)">
@@ -283,46 +283,39 @@
       <!-- Stations -->
       <g class="stations">
         <!-- Phase 1: Site -->
-        <g transform="translate(240, 65)">
-          <circle r="20" fill="#fff" stroke="#7c3aed" stroke-width="3"/>
+        <g transform="translate(260, 65)">
+          <circle r="22" fill="#fff" stroke="#7c3aed" stroke-width="3"/>
           <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#7c3aed">1</text>
-          <text y="-32" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="700">SITE</text>
-          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">10 surfaces</text>
+          <text y="-34" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="700">SITE</text>
+          <text y="52" text-anchor="middle" font-size="10" fill="#6b6960">8 surfaces</text>
         </g>
         <!-- Phase 2: Acq -->
-        <g transform="translate(420, 65)">
-          <circle r="20" fill="#fff" stroke="#0d9488" stroke-width="3"/>
+        <g transform="translate(510, 65)">
+          <circle r="22" fill="#fff" stroke="#0d9488" stroke-width="3"/>
           <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#0d9488">2</text>
-          <text y="-32" text-anchor="middle" font-size="11" fill="#0d9488" font-weight="700">ACQUISITION</text>
-          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">6 touchpoints</text>
+          <text y="-34" text-anchor="middle" font-size="11" fill="#0d9488" font-weight="700">ACQUISITION</text>
+          <text y="52" text-anchor="middle" font-size="10" fill="#6b6960">6 touchpoints</text>
         </g>
         <!-- Phase 3: Shop -->
-        <g transform="translate(600, 65)">
-          <circle r="20" fill="#fff" stroke="#2563eb" stroke-width="3"/>
+        <g transform="translate(760, 65)">
+          <circle r="22" fill="#fff" stroke="#2563eb" stroke-width="3"/>
           <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb">3</text>
-          <text y="-32" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="700">SHOP</text>
-          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">1 landing</text>
+          <text y="-34" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="700">SHOP</text>
+          <text y="52" text-anchor="middle" font-size="10" fill="#6b6960">1 landing</text>
         </g>
         <!-- Phase 4: Product -->
-        <g transform="translate(780, 65)">
-          <circle r="20" fill="#fff" stroke="#d97706" stroke-width="3"/>
+        <g transform="translate(1010, 65)">
+          <circle r="22" fill="#fff" stroke="#d97706" stroke-width="3"/>
           <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#d97706">4</text>
-          <text y="-32" text-anchor="middle" font-size="11" fill="#d97706" font-weight="700">PRODUIT</text>
-          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">18 pages</text>
+          <text y="-34" text-anchor="middle" font-size="11" fill="#d97706" font-weight="700">PRODUIT</text>
+          <text y="52" text-anchor="middle" font-size="10" fill="#6b6960">18 pages</text>
         </g>
         <!-- Phase 5: Checkout -->
-        <g transform="translate(960, 65)">
-          <circle r="20" fill="#fff" stroke="#dc2626" stroke-width="3"/>
+        <g transform="translate(1190, 65)">
+          <circle r="22" fill="#fff" stroke="#dc2626" stroke-width="3"/>
           <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#dc2626">5</text>
-          <text y="-32" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="700">CHECKOUT</text>
-          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">14 variantes</text>
-        </g>
-        <!-- Phase 6: Tel -->
-        <g transform="translate(1140, 65)">
-          <circle r="20" fill="#fff" stroke="#16a34a" stroke-width="3"/>
-          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#16a34a">6</text>
-          <text y="-32" text-anchor="middle" font-size="11" fill="#16a34a" font-weight="700">TÉL DIRECT</text>
-          <text y="50" text-anchor="middle" font-size="10" fill="#6b6960">2 numéros</text>
+          <text y="-34" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="700">CHECKOUT</text>
+          <text y="52" text-anchor="middle" font-size="10" fill="#6b6960">14 variantes</text>
         </g>
       </g>
       <!-- End node -->
@@ -337,7 +330,7 @@
   <!-- === Detailed map === -->
   <div class="map-canvas">
     <div class="map-inner" id="mapInner">
-      <svg class="map-svg" id="mapSvg" viewBox="0 0 1340 2400" preserveAspectRatio="xMidYMin meet"></svg>
+      <svg class="map-svg" id="mapSvg" viewBox="0 0 1340 2120" preserveAspectRatio="xMidYMin meet"></svg>
 
       <!-- All overlays are positioned absolute in % of mapInner -->
 
@@ -365,10 +358,8 @@
       <div class="tp site" style="top: 245px; left: 660px;"><span class="dot"></span>/cpf <small>(financement)</small></div>
       <div class="tp site" style="top: 245px; right: 80px;"><span class="dot"></span>/permis/types/b</div>
 
-      <div class="tp site" style="top: 310px; left: 80px;"><span class="dot"></span>/code/examen</div>
-      <div class="tp site" style="top: 310px; left: 320px;"><span class="dot"></span>/permis/demarches/prix/pas-cher</div>
-      <div class="tp tel"  style="top: 310px; left: 680px;"><span class="dot"></span><span class="tp-icon">📞</span>/choisir-auto-ecole-enfant</div>
-      <div class="tp tel"  style="top: 310px; right: 80px;"><span class="dot"></span><span class="tp-icon">📞</span>/stage</div>
+      <div class="tp site" style="top: 310px; left: 50%; transform: translateX(-50%);"><span class="dot"></span>/code/examen</div>
+      <div class="tp site" style="top: 310px; right: 80px;"><span class="dot"></span>/permis/demarches/prix/pas-cher</div>
 
       <div class="tp" style="top: 400px; left: 50%; transform: translateX(-50%); background: #f5f3ed; border-style: dashed;">
         <span style="color: var(--muted)">↓ formulaire callback Survicate</span>
@@ -476,20 +467,8 @@
       <div class="tp chk" style="top: 1720px; right: 180px;"><span class="dot"></span>RDV pédago</div>
       <div class="tp chk" style="top: 1720px; right: 60px;"><span class="dot"></span>CASA régional</div>
 
-      <!-- PHASE 6: TEL -->
-      <div class="phase-zone phase tel" style="top: 1940px; left: 24px; right: 24px; height: 170px;">
-        <div class="phase-bg"></div>
-        <div class="phase-label">
-          <div class="phase-icon">6</div>
-          Numéros directs (hors funnel WCB)
-          <span class="phase-cnt">· 2 numéros</span>
-        </div>
-      </div>
-      <div class="tp tel major" style="top: 2020px; left: 25%; transform: translateX(-50%);"><span class="dot"></span>📞 01 86 65 54 22 <small>(parents/enfant)</small></div>
-      <div class="tp tel major" style="top: 2020px; left: 75%; transform: translateX(-50%);"><span class="dot"></span>📞 09 70 70 50 61 <small>(stage)</small></div>
-
       <!-- TERMINAL: SALES -->
-      <div class="endpoint" style="top: 2200px; left: 50%; transform: translateX(-50%); border-color: var(--sales); background: linear-gradient(135deg, #ec4899 0%, #f97316 100%); color: #fff; padding: 16px 32px 16px 18px; font-size: 16px; box-shadow: 0 10px 30px rgba(236,72,153,.35);">
+      <div class="endpoint" style="top: 1960px; left: 50%; transform: translateX(-50%); border-color: var(--sales); background: linear-gradient(135deg, #ec4899 0%, #f97316 100%); color: #fff; padding: 16px 32px 16px 18px; font-size: 16px; box-shadow: 0 10px 30px rgba(236,72,153,.35);">
         <div class="ep-icon" style="background: #fff; color: var(--sales);">🎧</div>
         Conseiller Sales
       </div>
@@ -497,14 +476,13 @@
     </div>
 
     <div class="map-foot">
-      <span><b>50+ touchpoints</b> répartis sur <b>6 phases</b> du parcours</span>
+      <span><b>~50 touchpoints sales</b> répartis sur <b>5 phases</b> du parcours</span>
       <span>
         <span style="color:var(--site)">●</span> Site
         &nbsp;<span style="color:var(--acq)">●</span> Acquisition
         &nbsp;<span style="color:var(--shop)">●</span> Shop
         &nbsp;<span style="color:var(--prod)">●</span> Produit
         &nbsp;<span style="color:var(--chk)">●</span> Checkout
-        &nbsp;<span style="color:var(--tel)">●</span> Téléphone
         &nbsp;<span style="color:var(--sales)">●</span> Sales (cible)
       </span>
     </div>
@@ -523,10 +501,9 @@ const phases = [
   { y: 930, color: '#2563eb' },   // shop
   { y: 1240, color: '#d97706' },  // product
   { y: 1700, color: '#dc2626' },  // checkout
-  { y: 2030, color: '#16a34a' },  // tel
 ];
 const startY = 70;
-const endY = 2230;
+const endY = 1990;
 
 // Draw the main spine
 function drawSpine() {
