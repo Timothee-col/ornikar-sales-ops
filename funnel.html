@@ -52,7 +52,7 @@
   .map-canvas {
     position: relative;
     width: 100%;
-    height: 480px;
+    height: 620px;
   }
   .map-svg {
     position: absolute;
@@ -66,15 +66,15 @@
   .phase-col {
     position: absolute;
     top: 4px;
-    bottom: 28px;
+    bottom: 32px;
     pointer-events: none;
     z-index: 1;
   }
   .phase-col .bg {
     position: absolute;
     inset: 0;
-    border-radius: 12px;
-    opacity: .05;
+    border-radius: 14px;
+    opacity: .07;
   }
   .phase-col .col-label {
     position: absolute;
@@ -150,9 +150,9 @@
     z-index: 3;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px 7px;
-    font-size: 10px;
+    border-radius: 7px;
+    padding: 6px 10px;
+    font-size: 11px;
     font-weight: 500;
     color: var(--text);
     box-shadow: 0 1px 3px rgba(0,0,0,.04);
@@ -161,9 +161,9 @@
     white-space: nowrap;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     pointer-events: auto;
-    height: 22px;
+    height: 28px;
   }
   .tp:hover {
     transform: translateY(-1px);
@@ -171,22 +171,22 @@
     z-index: 10;
   }
   .tp .dot {
-    width: 6px; height: 6px;
+    width: 7px; height: 7px;
     border-radius: 50%;
     flex-shrink: 0;
   }
-  .tp .tp-icon { font-size: 11px; margin-right: 1px; }
+  .tp .tp-icon { font-size: 12px; margin-right: 1px; }
   .tp small {
     color: var(--muted);
     font-weight: 400;
-    font-size: 9px;
+    font-size: 10px;
     margin-left: 2px;
   }
   .tp.major {
-    font-size: 11px;
-    padding: 5px 9px;
+    font-size: 11.5px;
+    padding: 7px 11px;
     font-weight: 600;
-    height: 26px;
+    height: 32px;
   }
   .tp.site .dot { background: var(--site); }
   .tp.acq .dot  { background: var(--acq); }
@@ -339,7 +339,7 @@
   <!-- === Horizontal map === -->
   <div class="map-wrap">
     <div class="map-canvas" id="canvas">
-      <svg class="map-svg" id="mapSvg" viewBox="0 0 1320 480" preserveAspectRatio="xMidYMid meet"></svg>
+      <svg class="map-svg" id="mapSvg" viewBox="0 0 1320 620" preserveAspectRatio="xMidYMid meet"></svg>
 
       <!-- ENTRY -->
       <div class="endpoint" style="top: 50%; left: 12px; transform: translateY(-50%); border-color: var(--muted);">
@@ -347,7 +347,7 @@
         Prospect
       </div>
 
-      <!-- PHASE 1: SITE (x: 120-330, width 210) — items split above/below spine at y=235 -->
+      <!-- PHASE 1: SITE (x: 120-330, width 210) — spine at y=315 (band 285-345) -->
       <div class="phase-col site" style="left: 120px; width: 210px;">
         <div class="bg"></div>
         <div class="col-label">
@@ -356,21 +356,21 @@
         </div>
       </div>
       <!-- ABOVE -->
-      <div class="sub-label" style="top: 56px; left: 134px;">Global</div>
-      <div class="tp site major" style="top: 74px; left: 130px;"><span class="dot"></span>🧭 Header / Nav</div>
-      <div class="tp site major" style="top: 108px; left: 130px;"><span class="dot"></span>📋 Footer</div>
-      <div class="sub-label" style="top: 150px; left: 134px;">Landing principale</div>
-      <div class="tp site" style="top: 168px; left: 130px;"><span class="dot"></span>/permis<small>×3</small></div>
+      <div class="sub-label" style="top: 80px; left: 134px;">Global</div>
+      <div class="tp site major" style="top: 104px; left: 130px;"><span class="dot"></span>🧭 Header / Nav</div>
+      <div class="tp site major" style="top: 148px; left: 130px;"><span class="dot"></span>📋 Footer</div>
+      <div class="sub-label" style="top: 204px; left: 134px;">Landing principale</div>
+      <div class="tp site" style="top: 228px; left: 130px;"><span class="dot"></span>/permis<small>×3</small></div>
       <!-- BELOW -->
-      <div class="sub-label" style="top: 268px; left: 134px;">Autres landings</div>
-      <div class="tp site" style="top: 286px; left: 130px;"><span class="dot"></span>/conduite-accompagnee</div>
-      <div class="tp site" style="top: 314px; left: 130px;"><span class="dot"></span>/cpf<small>financement</small></div>
-      <div class="tp site" style="top: 342px; left: 130px;"><span class="dot"></span>/permis/types/b</div>
-      <div class="tp site" style="top: 370px; left: 130px;"><span class="dot"></span>/code/examen</div>
-      <div class="tp site" style="top: 398px; left: 130px;"><span class="dot"></span>/permis/.../pas-cher</div>
-      <div class="tp site" style="top: 426px; left: 130px;"><span class="dot"></span>/choisir-auto-ecole-enfant</div>
+      <div class="sub-label" style="top: 362px; left: 134px;">Autres landings</div>
+      <div class="tp site" style="top: 386px; left: 130px;"><span class="dot"></span>/conduite-accompagnee</div>
+      <div class="tp site" style="top: 418px; left: 130px;"><span class="dot"></span>/cpf<small>financement</small></div>
+      <div class="tp site" style="top: 450px; left: 130px;"><span class="dot"></span>/permis/types/b</div>
+      <div class="tp site" style="top: 482px; left: 130px;"><span class="dot"></span>/code/examen</div>
+      <div class="tp site" style="top: 514px; left: 130px;"><span class="dot"></span>/permis/.../pas-cher</div>
+      <div class="tp site" style="top: 546px; left: 130px;"><span class="dot"></span>/choisir-auto-ecole-enfant</div>
 
-      <!-- PHASE 2: ACQUISITION — items split above/below -->
+      <!-- PHASE 2: OUTILS TRANSVERSES -->
       <div class="phase-col acq" style="left: 350px; width: 170px;">
         <div class="bg"></div>
         <div class="col-label">
@@ -379,16 +379,16 @@
         </div>
       </div>
       <!-- ABOVE: Email CRM -->
-      <div class="sub-label" style="top: 56px; left: 364px;">Email CRM</div>
-      <div class="tp acq major" style="top: 74px; left: 360px;"><span class="dot"></span>✉️ emailcrm<small>body</small></div>
-      <div class="tp acq major" style="top: 112px; left: 360px;"><span class="dot"></span>✉️ emailcrmheader</div>
+      <div class="sub-label" style="top: 80px; left: 364px;">Email CRM</div>
+      <div class="tp acq major" style="top: 104px; left: 360px;"><span class="dot"></span>✉️ emailcrm<small>body</small></div>
+      <div class="tp acq major" style="top: 148px; left: 360px;"><span class="dot"></span>✉️ emailcrmheader</div>
       <!-- BELOW: Widgets -->
-      <div class="sub-label" style="top: 268px; left: 364px;">Widgets</div>
-      <div class="tp acq" style="top: 286px; left: 360px;"><span class="dot"></span>🏠 home_widget</div>
-      <div class="tp acq" style="top: 320px; left: 360px;"><span class="dot"></span>🚗 permis_widget</div>
-      <div class="tp acq" style="top: 354px; left: 360px;"><span class="dot"></span>🗂️ infocards</div>
+      <div class="sub-label" style="top: 362px; left: 364px;">Widgets</div>
+      <div class="tp acq" style="top: 386px; left: 360px;"><span class="dot"></span>🏠 home_widget</div>
+      <div class="tp acq" style="top: 418px; left: 360px;"><span class="dot"></span>🚗 permis_widget</div>
+      <div class="tp acq" style="top: 450px; left: 360px;"><span class="dot"></span>🗂️ infocards</div>
 
-      <!-- PHASE 3: SHOP (x: 540-650, width 110) -->
+      <!-- PHASE 3: SHOP -->
       <div class="phase-col shop" style="left: 540px; width: 110px;">
         <div class="bg"></div>
         <div class="col-label">
@@ -396,11 +396,11 @@
           <div class="line-2"><b>14 305</b> · <span class="conv">37,2%</span></div>
         </div>
       </div>
-      <div class="tp shop major" style="top: 140px; left: 595px; transform: translateX(-50%);">
+      <div class="tp shop major" style="top: 210px; left: 595px; transform: translateX(-50%);">
         <span class="dot"></span>🛍️ shop
       </div>
 
-      <!-- PHASE 4: PRODUCT (x: 670-960, width 290) — items spread vertically -->
+      <!-- PHASE 4: PRODUIT -->
       <div class="phase-col prod" style="left: 670px; width: 290px;">
         <div class="bg"></div>
         <div class="col-label">
@@ -409,41 +409,41 @@
         </div>
       </div>
 
-      <!-- sub-col A (680): Complet manu (above) + Complet auto (below) -->
-      <div class="sub-label" style="top: 56px; left: 684px;">📦 Complet manu.</div>
-      <div class="tp prod" style="top: 74px; left: 680px;"><span class="dot"></span>standard</div>
-      <div class="tp prod" style="top: 104px; left: 680px;"><span class="dot"></span>sans-code</div>
-      <div class="tp prod" style="top: 134px; left: 680px;"><span class="dot"></span>sans-code-lead</div>
-      <div class="tp prod" style="top: 164px; left: 680px;"><span class="dot"></span>revolut</div>
+      <!-- sub-col A (680) -->
+      <div class="sub-label" style="top: 80px; left: 684px;">📦 Complet manu.</div>
+      <div class="tp prod" style="top: 104px; left: 680px;"><span class="dot"></span>standard</div>
+      <div class="tp prod" style="top: 136px; left: 680px;"><span class="dot"></span>sans-code</div>
+      <div class="tp prod" style="top: 168px; left: 680px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp prod" style="top: 200px; left: 680px;"><span class="dot"></span>revolut</div>
 
-      <div class="sub-label" style="top: 268px; left: 684px;">📦 Complet auto</div>
-      <div class="tp prod" style="top: 286px; left: 680px;"><span class="dot"></span>standard</div>
-      <div class="tp prod" style="top: 316px; left: 680px;"><span class="dot"></span>sans-code</div>
-      <div class="tp prod" style="top: 346px; left: 680px;"><span class="dot"></span>sans-code-lead</div>
-      <div class="tp prod" style="top: 376px; left: 680px;"><span class="dot"></span>revolut</div>
+      <div class="sub-label" style="top: 362px; left: 684px;">📦 Complet auto</div>
+      <div class="tp prod" style="top: 386px; left: 680px;"><span class="dot"></span>standard</div>
+      <div class="tp prod" style="top: 418px; left: 680px;"><span class="dot"></span>sans-code</div>
+      <div class="tp prod" style="top: 450px; left: 680px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp prod" style="top: 482px; left: 680px;"><span class="dot"></span>revolut</div>
 
-      <!-- sub-col B (780): Heures (above, 5 items tight) + Régional (below) -->
-      <div class="sub-label" style="top: 56px; left: 784px;">⏱️ Heures</div>
-      <div class="tp prod" style="top: 74px; left: 780px;"><span class="dot"></span>pack-5h</div>
-      <div class="tp prod" style="top: 100px; left: 780px;"><span class="dot"></span>pack-10h</div>
-      <div class="tp prod" style="top: 126px; left: 780px;"><span class="dot"></span>pack-20h</div>
-      <div class="tp prod" style="top: 152px; left: 780px;"><span class="dot"></span>5h-auto</div>
-      <div class="tp prod" style="top: 178px; left: 780px;"><span class="dot"></span>10h-auto</div>
+      <!-- sub-col B (780) -->
+      <div class="sub-label" style="top: 80px; left: 784px;">⏱️ Heures</div>
+      <div class="tp prod" style="top: 104px; left: 780px;"><span class="dot"></span>pack-5h</div>
+      <div class="tp prod" style="top: 136px; left: 780px;"><span class="dot"></span>pack-10h</div>
+      <div class="tp prod" style="top: 168px; left: 780px;"><span class="dot"></span>pack-20h</div>
+      <div class="tp prod" style="top: 200px; left: 780px;"><span class="dot"></span>5h-auto</div>
+      <div class="tp prod" style="top: 232px; left: 780px;"><span class="dot"></span>10h-auto</div>
 
-      <div class="sub-label" style="top: 268px; left: 784px;">📍 Régional</div>
-      <div class="tp prod" style="top: 286px; left: 780px;"><span class="dot"></span>casa-nord</div>
-      <div class="tp prod" style="top: 316px; left: 780px;"><span class="dot"></span>casa-nord auto</div>
+      <div class="sub-label" style="top: 362px; left: 784px;">📍 Régional</div>
+      <div class="tp prod" style="top: 386px; left: 780px;"><span class="dot"></span>casa-nord</div>
+      <div class="tp prod" style="top: 418px; left: 780px;"><span class="dot"></span>casa-nord auto</div>
 
-      <!-- sub-col C (870): Cond. acc. (above) + RDV pédago (below) -->
-      <div class="sub-label" style="top: 56px; left: 874px;">🚙 Cond. acc.</div>
-      <div class="tp prod" style="top: 74px; left: 870px;"><span class="dot"></span>first manu.</div>
-      <div class="tp prod" style="top: 104px; left: 870px;"><span class="dot"></span>first auto</div>
+      <!-- sub-col C (870) -->
+      <div class="sub-label" style="top: 80px; left: 874px;">🚙 Cond. acc.</div>
+      <div class="tp prod" style="top: 104px; left: 870px;"><span class="dot"></span>first manu.</div>
+      <div class="tp prod" style="top: 136px; left: 870px;"><span class="dot"></span>first auto</div>
 
-      <div class="sub-label" style="top: 268px; left: 874px;">🎓 RDV pédago</div>
-      <div class="tp prod" style="top: 286px; left: 870px;"><span class="dot"></span>manuelle</div>
-      <div class="tp prod" style="top: 316px; left: 870px;"><span class="dot"></span>automatique</div>
+      <div class="sub-label" style="top: 362px; left: 874px;">🎓 RDV pédago</div>
+      <div class="tp prod" style="top: 386px; left: 870px;"><span class="dot"></span>manuelle</div>
+      <div class="tp prod" style="top: 418px; left: 870px;"><span class="dot"></span>automatique</div>
 
-      <!-- PHASE 5: CHECKOUT (x: 980-1210, width 230) -->
+      <!-- PHASE 5: CHECKOUT -->
       <div class="phase-col chk" style="left: 980px; width: 230px;">
         <div class="bg"></div>
         <div class="col-label">
@@ -452,29 +452,29 @@
         </div>
       </div>
 
-      <!-- sub-col A (990): Complet manu (above) + Complet auto (below) -->
-      <div class="sub-label" style="top: 56px; left: 994px;">🛒 Complet manu.</div>
-      <div class="tp chk" style="top: 74px; left: 990px;"><span class="dot"></span>standard</div>
-      <div class="tp chk" style="top: 104px; left: 990px;"><span class="dot"></span>sans-code</div>
-      <div class="tp chk" style="top: 134px; left: 990px;"><span class="dot"></span>sans-code-lead</div>
-      <div class="tp chk" style="top: 164px; left: 990px;"><span class="dot"></span>revolut</div>
+      <!-- sub-col A (990) -->
+      <div class="sub-label" style="top: 80px; left: 994px;">🛒 Complet manu.</div>
+      <div class="tp chk" style="top: 104px; left: 990px;"><span class="dot"></span>standard</div>
+      <div class="tp chk" style="top: 136px; left: 990px;"><span class="dot"></span>sans-code</div>
+      <div class="tp chk" style="top: 168px; left: 990px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp chk" style="top: 200px; left: 990px;"><span class="dot"></span>revolut</div>
 
-      <div class="sub-label" style="top: 268px; left: 994px;">🛒 Complet auto</div>
-      <div class="tp chk" style="top: 286px; left: 990px;"><span class="dot"></span>standard</div>
-      <div class="tp chk" style="top: 316px; left: 990px;"><span class="dot"></span>sans-code</div>
-      <div class="tp chk" style="top: 346px; left: 990px;"><span class="dot"></span>sans-code-lead</div>
-      <div class="tp chk" style="top: 376px; left: 990px;"><span class="dot"></span>revolut</div>
+      <div class="sub-label" style="top: 362px; left: 994px;">🛒 Complet auto</div>
+      <div class="tp chk" style="top: 386px; left: 990px;"><span class="dot"></span>standard</div>
+      <div class="tp chk" style="top: 418px; left: 990px;"><span class="dot"></span>sans-code</div>
+      <div class="tp chk" style="top: 450px; left: 990px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp chk" style="top: 482px; left: 990px;"><span class="dot"></span>revolut</div>
 
-      <!-- sub-col B (1100): Heures (above) + Autres (below) -->
-      <div class="sub-label" style="top: 56px; left: 1104px;">🛒 Heures</div>
-      <div class="tp chk" style="top: 74px; left: 1100px;"><span class="dot"></span>pack-5h</div>
-      <div class="tp chk" style="top: 104px; left: 1100px;"><span class="dot"></span>pack-10h</div>
-      <div class="tp chk" style="top: 134px; left: 1100px;"><span class="dot"></span>pack-20h</div>
+      <!-- sub-col B (1100) -->
+      <div class="sub-label" style="top: 80px; left: 1104px;">🛒 Heures</div>
+      <div class="tp chk" style="top: 104px; left: 1100px;"><span class="dot"></span>pack-5h</div>
+      <div class="tp chk" style="top: 136px; left: 1100px;"><span class="dot"></span>pack-10h</div>
+      <div class="tp chk" style="top: 168px; left: 1100px;"><span class="dot"></span>pack-20h</div>
 
-      <div class="sub-label" style="top: 268px; left: 1104px;">🛒 Autres</div>
-      <div class="tp chk" style="top: 286px; left: 1100px;"><span class="dot"></span>cond. acc.</div>
-      <div class="tp chk" style="top: 316px; left: 1100px;"><span class="dot"></span>RDV pédago</div>
-      <div class="tp chk" style="top: 346px; left: 1100px;"><span class="dot"></span>casa régional</div>
+      <div class="sub-label" style="top: 362px; left: 1104px;">🛒 Autres</div>
+      <div class="tp chk" style="top: 386px; left: 1100px;"><span class="dot"></span>cond. acc.</div>
+      <div class="tp chk" style="top: 418px; left: 1100px;"><span class="dot"></span>RDV pédago</div>
+      <div class="tp chk" style="top: 450px; left: 1100px;"><span class="dot"></span>casa régional</div>
 
       <!-- TERMINAL: SALES (right) -->
       <div class="endpoint sales" style="top: 50%; right: 12px; transform: translateY(-50%);">
@@ -500,8 +500,8 @@
 
 <script>
 const svg = document.getElementById('mapSvg');
-const H = 480;
-const cy = 235;        // spine vertical center (sits in the empty gutter between above/below tps)
+const H = 620;
+const cy = 315;        // spine vertical center (sits in the empty gutter between above/below tps)
 const startX = 90;
 const endX = 1230;
 
