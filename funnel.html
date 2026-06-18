@@ -17,230 +17,224 @@
     --shop: #2563eb;
     --prod: #d97706;
     --chk:  #dc2626;
-    --tel:  #16a34a;
     --sales:#ec4899;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.4; }
 
-  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 18px 28px; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
-  header .left span { font-size: 12px; color: var(--muted); margin-left: 12px; }
-  header nav a { font-size: 12px; color: var(--muted); text-decoration: none; margin-left: 16px; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+  header .left span { font-size: 11px; color: var(--muted); margin-left: 10px; }
+  header nav a { font-size: 11px; color: var(--muted); text-decoration: none; margin-left: 14px; }
   header nav a:hover { color: var(--shop); }
 
-  .container { max-width: 1400px; margin: 0 auto; padding: 24px 24px 80px; }
+  .container { max-width: 1360px; margin: 0 auto; padding: 16px 16px 32px; }
 
   /* === Top journey strip === */
   .journey-strip {
     background: linear-gradient(135deg, #fff 0%, #faf9f5 100%);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px 32px;
-    margin-bottom: 28px;
-    position: relative;
-    overflow: hidden;
+    border-radius: 14px;
+    padding: 16px 24px 10px;
+    margin-bottom: 14px;
   }
-  .journey-title { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 18px; }
-  .journey-svg { width: 100%; height: 130px; display: block; }
+  .journey-title { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+  .journey-svg { width: 100%; height: 110px; display: block; }
 
-  /* === Map canvas === */
-  .map-canvas {
-    position: relative;
+  /* === Horizontal map canvas === */
+  .map-wrap {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 0;
+    border-radius: 14px;
+    position: relative;
     overflow: hidden;
   }
-
-  .map-inner {
+  .map-canvas {
     position: relative;
     width: 100%;
-    min-height: 2120px;
+    height: 690px;
   }
-
   .map-svg {
     position: absolute;
     top: 0; left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     pointer-events: none;
     z-index: 1;
   }
 
-  /* Phase blocks (overlay) */
-  .phase-zone {
+  /* Phase column backgrounds */
+  .phase-col {
     position: absolute;
-    z-index: 2;
+    top: 48px;
+    bottom: 32px;
     pointer-events: none;
+    z-index: 1;
   }
-  .phase-zone .phase-bg {
+  .phase-col .bg {
     position: absolute;
     inset: 0;
-    border-radius: 18px;
-    opacity: .06;
-    pointer-events: none;
+    border-radius: 12px;
+    opacity: .05;
   }
-  .phase-zone .phase-label {
+  .phase-col .col-label {
     position: absolute;
-    top: 18px;
-    left: 24px;
+    top: -32px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: .02em;
-    pointer-events: auto;
+    gap: 6px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 100px;
-    padding: 6px 14px 6px 6px;
+    padding: 3px 10px 3px 3px;
+    font-size: 10.5px;
+    font-weight: 700;
     box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    white-space: nowrap;
+    z-index: 5;
+    pointer-events: auto;
   }
-  .phase-label .phase-icon {
-    width: 32px; height: 32px;
+  .col-label .num {
+    width: 20px; height: 20px;
     border-radius: 50%;
     color: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-size: 15px;
+    font-size: 11px;
     font-weight: 700;
   }
-  .phase-label .phase-cnt {
-    font-size: 11px;
+  .col-label .cnt {
+    font-size: 10px;
     font-weight: 500;
     color: var(--muted);
-    margin-left: 6px;
+    margin-left: 2px;
   }
+
+  .phase-col.site .bg  { background: var(--site); }
+  .phase-col.acq  .bg  { background: var(--acq); }
+  .phase-col.shop .bg  { background: var(--shop); }
+  .phase-col.prod .bg  { background: var(--prod); }
+  .phase-col.chk  .bg  { background: var(--chk); }
+  .phase-col.site .num { background: var(--site); }
+  .phase-col.acq  .num { background: var(--acq); }
+  .phase-col.shop .num { background: var(--shop); }
+  .phase-col.prod .num { background: var(--prod); }
+  .phase-col.chk  .num { background: var(--chk); }
 
   /* Touchpoint stations */
   .tp {
     position: absolute;
     z-index: 3;
     background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 8px 12px;
-    font-size: 11.5px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 7px;
+    font-size: 10px;
     font-weight: 500;
     color: var(--text);
-    box-shadow: 0 2px 6px rgba(0,0,0,.05);
-    transition: all .15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    transition: all .12s;
     cursor: default;
     white-space: nowrap;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
     pointer-events: auto;
+    height: 22px;
   }
   .tp:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,.08);
     z-index: 10;
   }
   .tp .dot {
-    width: 8px; height: 8px;
+    width: 6px; height: 6px;
     border-radius: 50%;
     flex-shrink: 0;
   }
-  .tp .tp-icon {
-    font-size: 14px;
-    margin-right: 2px;
-  }
+  .tp .tp-icon { font-size: 11px; margin-right: 1px; }
   .tp small {
     color: var(--muted);
     font-weight: 400;
-    font-size: 10.5px;
-    margin-left: 4px;
+    font-size: 9px;
+    margin-left: 2px;
   }
   .tp.major {
-    font-size: 13px;
-    padding: 10px 16px;
+    font-size: 11px;
+    padding: 5px 9px;
     font-weight: 600;
+    height: 26px;
   }
-  .tp.terminal {
-    background: linear-gradient(135deg, var(--sales) 0%, #f97316 100%);
-    color: #fff;
-    border: none;
-    padding: 16px 28px;
-    font-size: 15px;
-    font-weight: 700;
-    box-shadow: 0 8px 24px rgba(236, 72, 153, .35);
-  }
-  .tp.terminal .dot { background: #fff; width: 12px; height: 12px; }
-
   .tp.site .dot { background: var(--site); }
   .tp.acq .dot  { background: var(--acq); }
   .tp.shop .dot { background: var(--shop); }
   .tp.prod .dot { background: var(--prod); }
   .tp.chk .dot  { background: var(--chk); }
-  .tp.tel .dot  { background: var(--tel); }
   .tp.site { border-color: rgba(124, 58, 237, .25); }
   .tp.acq  { border-color: rgba(13, 148, 136, .25); }
   .tp.shop { border-color: rgba(37, 99, 235, .25); }
   .tp.prod { border-color: rgba(217, 119, 6, .25); }
   .tp.chk  { border-color: rgba(220, 38, 38, .25); }
-  .tp.tel  { border-color: rgba(22, 163, 74, .25); }
-
-  .phase.site .phase-icon { background: var(--site); }
-  .phase.acq  .phase-icon { background: var(--acq); }
-  .phase.shop .phase-icon { background: var(--shop); }
-  .phase.prod .phase-icon { background: var(--prod); }
-  .phase.chk  .phase-icon { background: var(--chk); }
-  .phase.tel  .phase-icon { background: var(--tel); }
-  .phase.site .phase-bg { background: var(--site); }
-  .phase.acq  .phase-bg { background: var(--acq); }
-  .phase.shop .phase-bg { background: var(--shop); }
-  .phase.prod .phase-bg { background: var(--prod); }
-  .phase.chk  .phase-bg { background: var(--chk); }
-  .phase.tel  .phase-bg { background: var(--tel); }
 
   /* Endpoints */
   .endpoint {
     position: absolute;
-    z-index: 4;
+    z-index: 5;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     background: var(--surface);
     border: 2px solid var(--text);
     border-radius: 100px;
-    padding: 10px 22px 10px 14px;
+    padding: 6px 16px 6px 6px;
     font-weight: 700;
-    font-size: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    font-size: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.08);
+    white-space: nowrap;
   }
   .endpoint .ep-icon {
-    width: 36px; height: 36px;
+    width: 28px; height: 28px;
     background: var(--text);
     color: #fff;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .endpoint.sales {
+    border-color: var(--sales);
+    background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+    color: #fff;
+    padding: 8px 18px 8px 8px;
+    font-size: 13px;
+    box-shadow: 0 6px 18px rgba(236, 72, 153, .3);
+  }
+  .endpoint.sales .ep-icon { background: #fff; color: var(--sales); width: 30px; height: 30px; }
+
+  /* Sub-group label inside phase */
+  .sub-label {
+    position: absolute;
+    font-size: 9px;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    z-index: 2;
+    pointer-events: none;
   }
 
-  /* Inline legend at top */
-  .legend-bar { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
-  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
-
   .map-foot {
-    padding: 18px 32px;
+    padding: 8px 16px;
     border-top: 1px solid var(--border);
     background: #faf9f5;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
   }
   .map-foot b { color: var(--text); }
-
-  @media (max-width: 980px) {
-    .map-inner { transform: scale(.7); transform-origin: top left; width: 142%; }
-  }
 </style>
 </head>
 <body>
@@ -248,7 +242,7 @@
 <header>
   <div class="left">
     <h1>Carte parcours Sales</h1>
-    <span>De la découverte au pickup téléphonique — toutes les occasions de parler à un conseiller</span>
+    <span>Toutes les occasions de parler à un conseiller — flux gauche → droite</span>
   </div>
   <nav>
     <a href="index.html">Analyse data →</a>
@@ -257,234 +251,209 @@
 
 <div class="container">
 
-  <!-- === Journey strip (overview) === -->
+  <!-- === Top journey strip === -->
   <div class="journey-strip">
-    <div class="journey-title">Vue d'ensemble du parcours</div>
-    <svg class="journey-svg" viewBox="0 0 1340 130" preserveAspectRatio="xMidYMid meet">
+    <div class="journey-title">Vue d'ensemble</div>
+    <svg class="journey-svg" viewBox="0 0 1340 110" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="lineGrad" x1="0" x2="1">
-          <stop offset="0"   stop-color="#7c3aed"/>
-          <stop offset="0.2" stop-color="#0d9488"/>
-          <stop offset="0.4" stop-color="#2563eb"/>
-          <stop offset="0.6" stop-color="#d97706"/>
-          <stop offset="0.8" stop-color="#dc2626"/>
-          <stop offset="1"   stop-color="#ec4899"/>
+          <stop offset="0"    stop-color="#1a1916"/>
+          <stop offset="0.1"  stop-color="#7c3aed"/>
+          <stop offset="0.3"  stop-color="#0d9488"/>
+          <stop offset="0.5"  stop-color="#2563eb"/>
+          <stop offset="0.7"  stop-color="#d97706"/>
+          <stop offset="0.9"  stop-color="#dc2626"/>
+          <stop offset="1"    stop-color="#ec4899"/>
         </linearGradient>
       </defs>
-      <!-- Main path -->
-      <path d="M 60 65 Q 200 65 260 65 T 510 65 T 760 65 T 1010 65 T 1260 65 T 1280 65"
-            stroke="url(#lineGrad)" stroke-width="6" fill="none" stroke-linecap="round"/>
-      <!-- Start node -->
-      <g transform="translate(50, 65)">
-        <circle r="22" fill="#1a1916"/>
-        <text y="6" text-anchor="middle" fill="#fff" font-size="20">👤</text>
-        <text y="50" text-anchor="middle" font-size="11" fill="#6b6960" font-weight="600">Prospect</text>
+      <path d="M 60 55 C 200 55, 260 25, 350 55 S 480 85, 600 55 S 720 25, 850 55 S 980 85, 1100 55 S 1220 55, 1280 55"
+            stroke="url(#lineGrad)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <g transform="translate(50, 55)">
+        <circle r="20" fill="#1a1916"/>
+        <text y="6" text-anchor="middle" fill="#fff" font-size="18">👤</text>
+        <text y="42" text-anchor="middle" font-size="10" fill="#6b6960" font-weight="600">Prospect</text>
       </g>
-      <!-- Stations -->
       <g class="stations">
-        <!-- Phase 1: Site -->
-        <g transform="translate(260, 65)">
-          <circle r="22" fill="#fff" stroke="#7c3aed" stroke-width="3"/>
-          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#7c3aed">1</text>
-          <text y="-34" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="700">SITE</text>
-          <text y="52" text-anchor="middle" font-size="10" fill="#6b6960">8 surfaces</text>
+        <g transform="translate(260, 55)">
+          <circle r="20" fill="#fff" stroke="#7c3aed" stroke-width="3"/>
+          <text y="5" text-anchor="middle" font-size="13" font-weight="700" fill="#7c3aed">1</text>
+          <text y="-28" text-anchor="middle" font-size="10" fill="#7c3aed" font-weight="700">SITE</text>
+          <text y="42" text-anchor="middle" font-size="9" fill="#6b6960">9 surfaces</text>
         </g>
-        <!-- Phase 2: Acq -->
-        <g transform="translate(510, 65)">
-          <circle r="22" fill="#fff" stroke="#0d9488" stroke-width="3"/>
-          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#0d9488">2</text>
-          <text y="-34" text-anchor="middle" font-size="11" fill="#0d9488" font-weight="700">ACQUISITION</text>
-          <text y="52" text-anchor="middle" font-size="10" fill="#6b6960">6 touchpoints</text>
+        <g transform="translate(510, 55)">
+          <circle r="20" fill="#fff" stroke="#0d9488" stroke-width="3"/>
+          <text y="5" text-anchor="middle" font-size="13" font-weight="700" fill="#0d9488">2</text>
+          <text y="-28" text-anchor="middle" font-size="10" fill="#0d9488" font-weight="700">ACQUISITION</text>
+          <text y="42" text-anchor="middle" font-size="9" fill="#6b6960">6 touchpoints</text>
         </g>
-        <!-- Phase 3: Shop -->
-        <g transform="translate(760, 65)">
-          <circle r="22" fill="#fff" stroke="#2563eb" stroke-width="3"/>
-          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#2563eb">3</text>
-          <text y="-34" text-anchor="middle" font-size="11" fill="#2563eb" font-weight="700">SHOP</text>
-          <text y="52" text-anchor="middle" font-size="10" fill="#6b6960">1 landing</text>
+        <g transform="translate(760, 55)">
+          <circle r="20" fill="#fff" stroke="#2563eb" stroke-width="3"/>
+          <text y="5" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">3</text>
+          <text y="-28" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="700">SHOP</text>
+          <text y="42" text-anchor="middle" font-size="9" fill="#6b6960">1 landing</text>
         </g>
-        <!-- Phase 4: Product -->
-        <g transform="translate(1010, 65)">
-          <circle r="22" fill="#fff" stroke="#d97706" stroke-width="3"/>
-          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#d97706">4</text>
-          <text y="-34" text-anchor="middle" font-size="11" fill="#d97706" font-weight="700">PRODUIT</text>
-          <text y="52" text-anchor="middle" font-size="10" fill="#6b6960">18 pages</text>
+        <g transform="translate(1010, 55)">
+          <circle r="20" fill="#fff" stroke="#d97706" stroke-width="3"/>
+          <text y="5" text-anchor="middle" font-size="13" font-weight="700" fill="#d97706">4</text>
+          <text y="-28" text-anchor="middle" font-size="10" fill="#d97706" font-weight="700">PRODUIT</text>
+          <text y="42" text-anchor="middle" font-size="9" fill="#6b6960">18 pages</text>
         </g>
-        <!-- Phase 5: Checkout -->
-        <g transform="translate(1190, 65)">
-          <circle r="22" fill="#fff" stroke="#dc2626" stroke-width="3"/>
-          <text y="6" text-anchor="middle" font-size="14" font-weight="700" fill="#dc2626">5</text>
-          <text y="-34" text-anchor="middle" font-size="11" fill="#dc2626" font-weight="700">CHECKOUT</text>
-          <text y="52" text-anchor="middle" font-size="10" fill="#6b6960">14 variantes</text>
+        <g transform="translate(1190, 55)">
+          <circle r="20" fill="#fff" stroke="#dc2626" stroke-width="3"/>
+          <text y="5" text-anchor="middle" font-size="13" font-weight="700" fill="#dc2626">5</text>
+          <text y="-28" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="700">CHECKOUT</text>
+          <text y="42" text-anchor="middle" font-size="9" fill="#6b6960">14 variantes</text>
         </g>
       </g>
-      <!-- End node -->
-      <g transform="translate(1290, 65)">
-        <circle r="26" fill="#ec4899"/>
-        <text y="7" text-anchor="middle" fill="#fff" font-size="22">🎧</text>
-        <text y="55" text-anchor="middle" font-size="11" fill="#ec4899" font-weight="700">SALES</text>
+      <g transform="translate(1290, 55)">
+        <circle r="24" fill="#ec4899"/>
+        <text y="6" text-anchor="middle" fill="#fff" font-size="20">🎧</text>
+        <text y="46" text-anchor="middle" font-size="10" fill="#ec4899" font-weight="700">SALES</text>
       </g>
     </svg>
   </div>
 
-  <!-- === Detailed map === -->
-  <div class="map-canvas">
-    <div class="map-inner" id="mapInner">
-      <svg class="map-svg" id="mapSvg" viewBox="0 0 1340 2120" preserveAspectRatio="xMidYMin meet"></svg>
-
-      <!-- All overlays are positioned absolute in % of mapInner -->
+  <!-- === Horizontal map === -->
+  <div class="map-wrap">
+    <div class="map-canvas" id="canvas">
+      <svg class="map-svg" id="mapSvg" viewBox="0 0 1320 690" preserveAspectRatio="xMidYMid meet"></svg>
 
       <!-- ENTRY -->
-      <div class="endpoint" style="top: 20px; left: 50%; transform: translateX(-50%); border-color: var(--muted);">
+      <div class="endpoint" style="top: 50%; left: 12px; transform: translateY(-50%); border-color: var(--muted);">
         <div class="ep-icon">👤</div>
-        Prospect arrive
+        Prospect
       </div>
 
-      <!-- PHASE 1: SITE -->
-      <div class="phase-zone phase site" style="top: 110px; left: 24px; right: 24px; height: 380px;">
-        <div class="phase-bg"></div>
-        <div class="phase-label">
-          <div class="phase-icon">1</div>
-          Site ornikar.com
-          <span class="phase-cnt">· 10 surfaces</span>
-        </div>
+      <!-- PHASE 1: SITE (x: 120-330, width 210) -->
+      <div class="phase-col site" style="left: 120px; width: 210px;">
+        <div class="bg"></div>
+        <div class="col-label"><div class="num">1</div>Site<span class="cnt">·9</span></div>
       </div>
-      <!-- Site touchpoints -->
-      <div class="tp site major" style="top: 175px; left: 60px;"><span class="dot"></span><span class="tp-icon">🧭</span>Header / Nav (global)</div>
-      <div class="tp site major" style="top: 175px; right: 60px;"><span class="dot"></span><span class="tp-icon">📋</span>Footer (global)</div>
+      <div class="sub-label" style="top: 70px; left: 134px;">Global</div>
+      <div class="tp site major" style="top: 90px; left: 130px;"><span class="dot"></span>🧭 Header / Nav</div>
+      <div class="tp site major" style="top: 124px; left: 130px;"><span class="dot"></span>📋 Footer</div>
 
-      <div class="tp site" style="top: 245px; left: 80px;"><span class="dot"></span>/permis <small>×3 in-page</small></div>
-      <div class="tp site" style="top: 245px; left: 380px;"><span class="dot"></span>/conduite-accompagnee</div>
-      <div class="tp site" style="top: 245px; left: 660px;"><span class="dot"></span>/cpf <small>(financement)</small></div>
-      <div class="tp site" style="top: 245px; right: 80px;"><span class="dot"></span>/permis/types/b</div>
+      <div class="sub-label" style="top: 168px; left: 134px;">Landings éditoriales</div>
+      <div class="tp site" style="top: 188px; left: 130px;"><span class="dot"></span>/permis<small>×3</small></div>
+      <div class="tp site" style="top: 218px; left: 130px;"><span class="dot"></span>/conduite-accompagnee</div>
+      <div class="tp site" style="top: 248px; left: 130px;"><span class="dot"></span>/cpf<small>financement</small></div>
+      <div class="tp site" style="top: 278px; left: 130px;"><span class="dot"></span>/permis/types/b</div>
+      <div class="tp site" style="top: 308px; left: 130px;"><span class="dot"></span>/code/examen</div>
+      <div class="tp site" style="top: 338px; left: 130px;"><span class="dot"></span>/permis/.../pas-cher</div>
+      <div class="tp site" style="top: 368px; left: 130px;"><span class="dot"></span>/choisir-auto-ecole-enfant</div>
 
-      <div class="tp site" style="top: 310px; left: 80px;"><span class="dot"></span>/code/examen</div>
-      <div class="tp site" style="top: 310px; left: 380px;"><span class="dot"></span>/permis/demarches/prix/pas-cher</div>
-      <div class="tp site" style="top: 310px; right: 80px;"><span class="dot"></span>/choisir-auto-ecole-enfant</div>
-
-      <div class="tp" style="top: 400px; left: 50%; transform: translateX(-50%); background: #f5f3ed; border-style: dashed;">
-        <span style="color: var(--muted)">↓ formulaire callback Survicate</span>
+      <!-- PHASE 2: ACQUISITION (x: 350-520, width 170) -->
+      <div class="phase-col acq" style="left: 350px; width: 170px;">
+        <div class="bg"></div>
+        <div class="col-label"><div class="num">2</div>Acquisition<span class="cnt">·6</span></div>
       </div>
+      <div class="sub-label" style="top: 70px; left: 364px;">Email CRM</div>
+      <div class="tp acq major" style="top: 90px; left: 360px;"><span class="dot"></span>✉️ emailcrm<small>body</small></div>
+      <div class="tp acq major" style="top: 124px; left: 360px;"><span class="dot"></span>✉️ emailcrmheader</div>
 
-      <!-- PHASE 2: ACQUISITION -->
-      <div class="phase-zone phase acq" style="top: 530px; left: 24px; right: 24px; height: 280px;">
-        <div class="phase-bg"></div>
-        <div class="phase-label">
-          <div class="phase-icon">2</div>
-          Acquisition (email / widgets)
-          <span class="phase-cnt">· 6 touchpoints</span>
-        </div>
+      <div class="sub-label" style="top: 168px; left: 364px;">Widgets</div>
+      <div class="tp acq" style="top: 188px; left: 360px;"><span class="dot"></span>🏠 home_widget</div>
+      <div class="tp acq" style="top: 218px; left: 360px;"><span class="dot"></span>🚗 permis_widget</div>
+      <div class="tp acq" style="top: 248px; left: 360px;"><span class="dot"></span>🗂️ infocards</div>
+
+      <div class="sub-label" style="top: 292px; left: 364px;">Chat</div>
+      <div class="tp acq" style="top: 312px; left: 360px;"><span class="dot"></span>💬 chatbot_support</div>
+
+      <!-- PHASE 3: SHOP (x: 540-650, width 110) -->
+      <div class="phase-col shop" style="left: 540px; width: 110px;">
+        <div class="bg"></div>
+        <div class="col-label"><div class="num">3</div>Shop<span class="cnt">·1</span></div>
       </div>
-      <div class="tp acq major" style="top: 600px; left: 80px;"><span class="dot"></span><span class="tp-icon">✉️</span>emailcrm <small>(body)</small></div>
-      <div class="tp acq major" style="top: 600px; left: 360px;"><span class="dot"></span><span class="tp-icon">✉️</span>emailcrmheader</div>
-      <div class="tp acq major" style="top: 600px; right: 80px;"><span class="dot"></span><span class="tp-icon">💬</span>chatbot_support</div>
-
-      <div class="tp acq" style="top: 685px; left: 100px;"><span class="dot"></span><span class="tp-icon">🏠</span>home_widget</div>
-      <div class="tp acq" style="top: 685px; left: 380px;"><span class="dot"></span><span class="tp-icon">🚗</span>permis_widget</div>
-      <div class="tp acq" style="top: 685px; right: 100px;"><span class="dot"></span><span class="tp-icon">🗂️</span>infocards</div>
-
-      <!-- PHASE 3: SHOP LANDING -->
-      <div class="phase-zone phase shop" style="top: 840px; left: 24px; right: 24px; height: 150px;">
-        <div class="phase-bg"></div>
-        <div class="phase-label">
-          <div class="phase-icon">3</div>
-          Boutique — Landing
-          <span class="phase-cnt">· 1 surface</span>
-        </div>
-      </div>
-      <div class="tp shop major" style="top: 920px; left: 50%; transform: translateX(-50%); padding: 14px 28px; font-size: 14px;">
-        <span class="dot"></span><span class="tp-icon">🛍️</span>shop <small>(landing boutique)</small>
+      <div class="tp shop major" style="top: 50%; left: 595px; transform: translate(-50%, -50%);">
+        <span class="dot"></span>🛍️ shop
       </div>
 
-      <!-- PHASE 4: PRODUCT PAGES -->
-      <div class="phase-zone phase prod" style="top: 1020px; left: 24px; right: 24px; height: 500px;">
-        <div class="phase-bg"></div>
-        <div class="phase-label">
-          <div class="phase-icon">4</div>
-          Pages produit
-          <span class="phase-cnt">· 18 produits</span>
-        </div>
+      <!-- PHASE 4: PRODUCT (x: 670-960, width 290) -->
+      <div class="phase-col prod" style="left: 670px; width: 290px;">
+        <div class="bg"></div>
+        <div class="col-label"><div class="num">4</div>Produit<span class="cnt">·18</span></div>
       </div>
 
-      <!-- Product: Pack permis complet -->
-      <div class="tp prod major" style="top: 1090px; left: 80px;"><span class="dot"></span>📦 Pack permis complet (manuel)</div>
-      <div class="tp prod" style="top: 1145px; left: 80px;"><span class="dot"></span>+ standard</div>
-      <div class="tp prod" style="top: 1145px; left: 200px;"><span class="dot"></span>+ sans-code</div>
-      <div class="tp prod" style="top: 1190px; left: 80px;"><span class="dot"></span>+ sans-code-lead</div>
-      <div class="tp prod" style="top: 1190px; left: 200px;"><span class="dot"></span>+ revolut</div>
+      <!-- sub-col A (680) -->
+      <div class="sub-label" style="top: 70px; left: 684px;">📦 Complet manu.</div>
+      <div class="tp prod" style="top: 90px; left: 680px;"><span class="dot"></span>standard</div>
+      <div class="tp prod" style="top: 120px; left: 680px;"><span class="dot"></span>sans-code</div>
+      <div class="tp prod" style="top: 150px; left: 680px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp prod" style="top: 180px; left: 680px;"><span class="dot"></span>revolut</div>
 
-      <!-- Product: Pack auto -->
-      <div class="tp prod major" style="top: 1090px; left: 410px;"><span class="dot"></span>📦 Pack permis complet (auto)</div>
-      <div class="tp prod" style="top: 1145px; left: 410px;"><span class="dot"></span>+ standard</div>
-      <div class="tp prod" style="top: 1145px; left: 540px;"><span class="dot"></span>+ sans-code</div>
-      <div class="tp prod" style="top: 1190px; left: 410px;"><span class="dot"></span>+ sans-code-lead</div>
-      <div class="tp prod" style="top: 1190px; left: 540px;"><span class="dot"></span>+ revolut</div>
+      <div class="sub-label" style="top: 224px; left: 684px;">📦 Complet auto</div>
+      <div class="tp prod" style="top: 244px; left: 680px;"><span class="dot"></span>standard</div>
+      <div class="tp prod" style="top: 274px; left: 680px;"><span class="dot"></span>sans-code</div>
+      <div class="tp prod" style="top: 304px; left: 680px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp prod" style="top: 334px; left: 680px;"><span class="dot"></span>revolut</div>
 
-      <!-- Product: heures -->
-      <div class="tp prod major" style="top: 1090px; right: 80px;"><span class="dot"></span>⏱️ Packs heures</div>
-      <div class="tp prod" style="top: 1145px; right: 200px;"><span class="dot"></span>pack-5h</div>
-      <div class="tp prod" style="top: 1145px; right: 100px;"><span class="dot"></span>pack-10h</div>
-      <div class="tp prod" style="top: 1190px; right: 180px;"><span class="dot"></span>pack-20h</div>
-      <div class="tp prod" style="top: 1190px; right: 60px;"><span class="dot"></span>+ versions auto</div>
+      <!-- sub-col B (780) -->
+      <div class="sub-label" style="top: 70px; left: 784px;">⏱️ Heures</div>
+      <div class="tp prod" style="top: 90px; left: 780px;"><span class="dot"></span>pack-5h</div>
+      <div class="tp prod" style="top: 120px; left: 780px;"><span class="dot"></span>pack-10h</div>
+      <div class="tp prod" style="top: 150px; left: 780px;"><span class="dot"></span>pack-20h</div>
+      <div class="tp prod" style="top: 180px; left: 780px;"><span class="dot"></span>5h-auto</div>
+      <div class="tp prod" style="top: 210px; left: 780px;"><span class="dot"></span>10h-auto</div>
 
-      <!-- Product: conduite & rdv -->
-      <div class="tp prod major" style="top: 1300px; left: 80px;"><span class="dot"></span>🚙 Conduite accompagnée</div>
-      <div class="tp prod" style="top: 1355px; left: 80px;"><span class="dot"></span>manuelle</div>
-      <div class="tp prod" style="top: 1355px; left: 200px;"><span class="dot"></span>boîte auto</div>
+      <div class="sub-label" style="top: 254px; left: 784px;">📍 Régional</div>
+      <div class="tp prod" style="top: 274px; left: 780px;"><span class="dot"></span>casa-nord</div>
+      <div class="tp prod" style="top: 304px; left: 780px;"><span class="dot"></span>casa-nord auto</div>
 
-      <div class="tp prod major" style="top: 1300px; left: 410px;"><span class="dot"></span>🎓 RDV pédagogiques</div>
-      <div class="tp prod" style="top: 1355px; left: 410px;"><span class="dot"></span>manuelle</div>
-      <div class="tp prod" style="top: 1355px; left: 530px;"><span class="dot"></span>automatique</div>
+      <!-- sub-col C (870) -->
+      <div class="sub-label" style="top: 70px; left: 874px;">🚙 Cond. acc.</div>
+      <div class="tp prod" style="top: 90px; left: 870px;"><span class="dot"></span>first manu.</div>
+      <div class="tp prod" style="top: 120px; left: 870px;"><span class="dot"></span>first auto</div>
 
-      <div class="tp prod major" style="top: 1300px; right: 80px;"><span class="dot"></span>📍 Régional CASA</div>
-      <div class="tp prod" style="top: 1355px; right: 180px;"><span class="dot"></span>nord-france</div>
-      <div class="tp prod" style="top: 1355px; right: 60px;"><span class="dot"></span>nord-france auto</div>
+      <div class="sub-label" style="top: 164px; left: 874px;">🎓 RDV pédago</div>
+      <div class="tp prod" style="top: 184px; left: 870px;"><span class="dot"></span>manuelle</div>
+      <div class="tp prod" style="top: 214px; left: 870px;"><span class="dot"></span>automatique</div>
 
-      <!-- PHASE 5: CHECKOUT -->
-      <div class="phase-zone phase chk" style="top: 1550px; left: 24px; right: 24px; height: 360px;">
-        <div class="phase-bg"></div>
-        <div class="phase-label">
-          <div class="phase-icon">5</div>
-          Checkout
-          <span class="phase-cnt">· 14 variantes</span>
-        </div>
+      <!-- PHASE 5: CHECKOUT (x: 980-1210, width 230) -->
+      <div class="phase-col chk" style="left: 980px; width: 230px;">
+        <div class="bg"></div>
+        <div class="col-label"><div class="num">5</div>Checkout<span class="cnt">·14</span></div>
       </div>
 
-      <div class="tp chk major" style="top: 1620px; left: 80px;"><span class="dot"></span>🛒 Pack complet (manuel)</div>
-      <div class="tp chk" style="top: 1675px; left: 80px;"><span class="dot"></span>standard</div>
-      <div class="tp chk" style="top: 1675px; left: 200px;"><span class="dot"></span>sans-code</div>
-      <div class="tp chk" style="top: 1720px; left: 80px;"><span class="dot"></span>sans-code-lead</div>
-      <div class="tp chk" style="top: 1720px; left: 200px;"><span class="dot"></span>revolut</div>
+      <!-- sub-col A (990) -->
+      <div class="sub-label" style="top: 70px; left: 994px;">🛒 Complet manu.</div>
+      <div class="tp chk" style="top: 90px; left: 990px;"><span class="dot"></span>standard</div>
+      <div class="tp chk" style="top: 120px; left: 990px;"><span class="dot"></span>sans-code</div>
+      <div class="tp chk" style="top: 150px; left: 990px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp chk" style="top: 180px; left: 990px;"><span class="dot"></span>revolut</div>
 
-      <div class="tp chk major" style="top: 1620px; left: 410px;"><span class="dot"></span>🛒 Pack complet (auto)</div>
-      <div class="tp chk" style="top: 1675px; left: 410px;"><span class="dot"></span>standard</div>
-      <div class="tp chk" style="top: 1675px; left: 540px;"><span class="dot"></span>sans-code</div>
-      <div class="tp chk" style="top: 1720px; left: 410px;"><span class="dot"></span>sans-code-lead</div>
-      <div class="tp chk" style="top: 1720px; left: 540px;"><span class="dot"></span>revolut</div>
+      <div class="sub-label" style="top: 224px; left: 994px;">🛒 Complet auto</div>
+      <div class="tp chk" style="top: 244px; left: 990px;"><span class="dot"></span>standard</div>
+      <div class="tp chk" style="top: 274px; left: 990px;"><span class="dot"></span>sans-code</div>
+      <div class="tp chk" style="top: 304px; left: 990px;"><span class="dot"></span>sans-code-lead</div>
+      <div class="tp chk" style="top: 334px; left: 990px;"><span class="dot"></span>revolut</div>
 
-      <div class="tp chk major" style="top: 1620px; right: 80px;"><span class="dot"></span>🛒 Heures + autres</div>
-      <div class="tp chk" style="top: 1675px; right: 180px;"><span class="dot"></span>pack-5h/10h/20h</div>
-      <div class="tp chk" style="top: 1675px; right: 60px;"><span class="dot"></span>conduite acc.</div>
-      <div class="tp chk" style="top: 1720px; right: 180px;"><span class="dot"></span>RDV pédago</div>
-      <div class="tp chk" style="top: 1720px; right: 60px;"><span class="dot"></span>CASA régional</div>
+      <!-- sub-col B (1100) -->
+      <div class="sub-label" style="top: 70px; left: 1104px;">🛒 Heures</div>
+      <div class="tp chk" style="top: 90px; left: 1100px;"><span class="dot"></span>pack-5h</div>
+      <div class="tp chk" style="top: 120px; left: 1100px;"><span class="dot"></span>pack-10h</div>
+      <div class="tp chk" style="top: 150px; left: 1100px;"><span class="dot"></span>pack-20h</div>
 
-      <!-- TERMINAL: SALES -->
-      <div class="endpoint" style="top: 1960px; left: 50%; transform: translateX(-50%); border-color: var(--sales); background: linear-gradient(135deg, #ec4899 0%, #f97316 100%); color: #fff; padding: 16px 32px 16px 18px; font-size: 16px; box-shadow: 0 10px 30px rgba(236,72,153,.35);">
-        <div class="ep-icon" style="background: #fff; color: var(--sales);">🎧</div>
-        Conseiller Sales
+      <div class="sub-label" style="top: 194px; left: 1104px;">🛒 Autres</div>
+      <div class="tp chk" style="top: 214px; left: 1100px;"><span class="dot"></span>cond. acc.</div>
+      <div class="tp chk" style="top: 244px; left: 1100px;"><span class="dot"></span>RDV pédago</div>
+      <div class="tp chk" style="top: 274px; left: 1100px;"><span class="dot"></span>casa régional</div>
+
+      <!-- TERMINAL: SALES (right) -->
+      <div class="endpoint sales" style="top: 50%; right: 12px; transform: translateY(-50%);">
+        <div class="ep-icon">🎧</div>
+        Sales
       </div>
 
     </div>
-
     <div class="map-foot">
-      <span><b>~50 touchpoints sales</b> répartis sur <b>5 phases</b> du parcours</span>
+      <span><b>~50 touchpoints sales</b> · <b>5 phases</b></span>
       <span>
         <span style="color:var(--site)">●</span> Site
         &nbsp;<span style="color:var(--acq)">●</span> Acquisition
         &nbsp;<span style="color:var(--shop)">●</span> Shop
         &nbsp;<span style="color:var(--prod)">●</span> Produit
         &nbsp;<span style="color:var(--chk)">●</span> Checkout
-        &nbsp;<span style="color:var(--sales)">●</span> Sales (cible)
+        &nbsp;<span style="color:var(--sales)">●</span> Sales
       </span>
     </div>
   </div>
@@ -492,76 +461,69 @@
 </div>
 
 <script>
-// Draw the meandering connector lines on the SVG canvas
 const svg = document.getElementById('mapSvg');
-const W = 1340;
+const H = 690;
+const cy = H / 2;
+const startX = 90;
+const endX = 1230;
 
+// Phase centers (x in canvas coords)
 const phases = [
-  { y: 290, color: '#7c3aed' },   // site
-  { y: 690, color: '#0d9488' },   // acq
-  { y: 930, color: '#2563eb' },   // shop
-  { y: 1240, color: '#d97706' },  // product
-  { y: 1700, color: '#dc2626' },  // checkout
+  { x: 225,  color: '#7c3aed' },
+  { x: 435,  color: '#0d9488' },
+  { x: 595,  color: '#2563eb' },
+  { x: 815,  color: '#d97706' },
+  { x: 1095, color: '#dc2626' },
 ];
-const startY = 70;
-const endY = 1990;
 
-// Draw the main spine
 function drawSpine() {
-  const cx = W/2;
-  let d = `M ${cx} ${startY}`;
-  // Curve through each phase node center
-  let prevY = startY;
+  let d = `M ${startX} ${cy}`;
+  let prevX = startX;
   for (let i=0; i<phases.length; i++) {
     const p = phases[i];
-    // alternate left/right wobble for visual interest
-    const wobble = (i % 2 === 0) ? -160 : 160;
-    const midY = (prevY + p.y) / 2;
-    d += ` C ${cx + wobble} ${midY}, ${cx - wobble} ${midY}, ${cx} ${p.y}`;
-    prevY = p.y;
+    const wobble = (i % 2 === 0) ? -40 : 40;
+    const midX = (prevX + p.x) / 2;
+    d += ` C ${midX} ${cy + wobble}, ${midX} ${cy - wobble}, ${p.x} ${cy}`;
+    prevX = p.x;
   }
-  // To end
-  d += ` C ${cx + 160} ${(prevY+endY)/2}, ${cx - 160} ${(prevY+endY)/2}, ${cx} ${endY}`;
+  const midX = (prevX + endX) / 2;
+  d += ` C ${midX} ${cy - 40}, ${midX} ${cy + 40}, ${endX} ${cy}`;
 
-  // Background spine (gray, thicker)
-  const bg = document.createElementNS('http://www.w3.org/2000/svg','path');
-  bg.setAttribute('d', d);
-  bg.setAttribute('stroke', '#e6e3dc');
-  bg.setAttribute('stroke-width', '14');
-  bg.setAttribute('fill', 'none');
-  bg.setAttribute('stroke-linecap', 'round');
-  svg.appendChild(bg);
-
-  // Gradient stroke spine
   const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
   defs.innerHTML = `
-    <linearGradient id="spineGrad" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="spineGrad" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0"    stop-color="#1a1916"/>
-      <stop offset="0.05" stop-color="#7c3aed"/>
-      <stop offset="0.25" stop-color="#0d9488"/>
-      <stop offset="0.40" stop-color="#2563eb"/>
-      <stop offset="0.55" stop-color="#d97706"/>
-      <stop offset="0.75" stop-color="#dc2626"/>
-      <stop offset="0.88" stop-color="#16a34a"/>
+      <stop offset="0.08" stop-color="#7c3aed"/>
+      <stop offset="0.30" stop-color="#0d9488"/>
+      <stop offset="0.45" stop-color="#2563eb"/>
+      <stop offset="0.62" stop-color="#d97706"/>
+      <stop offset="0.85" stop-color="#dc2626"/>
       <stop offset="1"    stop-color="#ec4899"/>
     </linearGradient>
   `;
   svg.appendChild(defs);
 
+  const bg = document.createElementNS('http://www.w3.org/2000/svg','path');
+  bg.setAttribute('d', d);
+  bg.setAttribute('stroke', '#e6e3dc');
+  bg.setAttribute('stroke-width', '12');
+  bg.setAttribute('fill', 'none');
+  bg.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(bg);
+
   const fg = document.createElementNS('http://www.w3.org/2000/svg','path');
   fg.setAttribute('d', d);
   fg.setAttribute('stroke', 'url(#spineGrad)');
-  fg.setAttribute('stroke-width', '6');
+  fg.setAttribute('stroke-width', '5');
   fg.setAttribute('fill', 'none');
   fg.setAttribute('stroke-linecap', 'round');
-  fg.setAttribute('opacity', '0.85');
+  fg.setAttribute('opacity', '0.9');
   svg.appendChild(fg);
 
-  // Pulse dot at each phase center
   for (const p of phases) {
     const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx', cx);
-    c.setAttribute('cy', p.y);
+    c.setAttribute('cx', p.x);
+    c.setAttribute('cy', cy);
     c.setAttribute('r', 10);
     c.setAttribute('fill', '#fff');
     c.setAttribute('stroke', p.color);
@@ -569,13 +531,11 @@ function drawSpine() {
     svg.appendChild(c);
   }
 
-  // Start / end dots
   const sd = document.createElementNS('http://www.w3.org/2000/svg','circle');
-  sd.setAttribute('cx', cx); sd.setAttribute('cy', startY); sd.setAttribute('r', 8); sd.setAttribute('fill', '#1a1916');
+  sd.setAttribute('cx', startX); sd.setAttribute('cy', cy); sd.setAttribute('r', 7); sd.setAttribute('fill', '#1a1916');
   svg.appendChild(sd);
-
   const ed = document.createElementNS('http://www.w3.org/2000/svg','circle');
-  ed.setAttribute('cx', cx); ed.setAttribute('cy', endY); ed.setAttribute('r', 12); ed.setAttribute('fill', '#ec4899');
+  ed.setAttribute('cx', endX); ed.setAttribute('cy', cy); ed.setAttribute('r', 12); ed.setAttribute('fill', '#ec4899');
   svg.appendChild(ed);
 }
 
