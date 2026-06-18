@@ -78,23 +78,46 @@
   }
   .phase-col .col-label {
     position: absolute;
-    top: -32px;
+    top: -48px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    align-items: center;
-    gap: 6px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 100px;
-    padding: 3px 10px 3px 3px;
-    font-size: 10.5px;
-    font-weight: 700;
+    border-radius: 12px;
+    padding: 4px 4px 5px 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,.04);
     white-space: nowrap;
     z-index: 5;
     pointer-events: auto;
+    min-width: 0;
   }
+  .col-label .line-1 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding-right: 8px;
+  }
+  .col-label .line-2 {
+    font-size: 10px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    padding: 0 6px;
+  }
+  .col-label .line-2 b { color: var(--text); font-weight: 700; }
+  .col-label .line-2 .conv { font-weight: 700; }
+  .phase-col.site .col-label .conv { color: var(--site); }
+  .phase-col.acq  .col-label .conv { color: var(--acq); }
+  .phase-col.shop .col-label .conv { color: var(--shop); }
+  .phase-col.prod .col-label .conv { color: var(--prod); }
+  .phase-col.chk  .col-label .conv { color: var(--chk); }
+  .col-label .line-2.na { color: var(--hint); font-style: italic; }
   .col-label .num {
     width: 20px; height: 20px;
     border-radius: 50%;
@@ -242,7 +265,7 @@
 <header>
   <div class="left">
     <h1>Carte parcours Sales</h1>
-    <span>Toutes les occasions de parler à un conseiller — flux gauche → droite</span>
+    <span>Toutes les occasions de parler à un conseiller · données 2 janv → 6 juin 2026</span>
   </div>
   <nav>
     <a href="index.html">Analyse data →</a>
@@ -327,7 +350,10 @@
       <!-- PHASE 1: SITE (x: 120-330, width 210) — items split above/below spine at y=235 -->
       <div class="phase-col site" style="left: 120px; width: 210px;">
         <div class="bg"></div>
-        <div class="col-label"><div class="num">1</div>Site<span class="cnt">· 9</span></div>
+        <div class="col-label">
+          <div class="line-1"><div class="num">1</div>Site<span class="cnt">· 9</span></div>
+          <div class="line-2 na">— pas de tracking</div>
+        </div>
       </div>
       <!-- ABOVE -->
       <div class="sub-label" style="top: 56px; left: 134px;">Global</div>
@@ -347,7 +373,10 @@
       <!-- PHASE 2: ACQUISITION — items split above/below -->
       <div class="phase-col acq" style="left: 350px; width: 170px;">
         <div class="bg"></div>
-        <div class="col-label"><div class="num">2</div>Outils transverses<span class="cnt">· 5</span></div>
+        <div class="col-label">
+          <div class="line-1"><div class="num">2</div>Outils transverses<span class="cnt">· 5</span></div>
+          <div class="line-2"><b>2 607</b> WCB · <span class="conv">9,3%</span></div>
+        </div>
       </div>
       <!-- ABOVE: Email CRM -->
       <div class="sub-label" style="top: 56px; left: 364px;">Email CRM</div>
@@ -362,7 +391,10 @@
       <!-- PHASE 3: SHOP (x: 540-650, width 110) -->
       <div class="phase-col shop" style="left: 540px; width: 110px;">
         <div class="bg"></div>
-        <div class="col-label"><div class="num">3</div>Shop<span class="cnt">· 1</span></div>
+        <div class="col-label">
+          <div class="line-1"><div class="num">3</div>Shop<span class="cnt">· 1</span></div>
+          <div class="line-2"><b>23 149</b> WCB · <span class="conv">7,5%</span></div>
+        </div>
       </div>
       <div class="tp shop major" style="top: 140px; left: 595px; transform: translateX(-50%);">
         <span class="dot"></span>🛍️ shop
@@ -371,7 +403,10 @@
       <!-- PHASE 4: PRODUCT (x: 670-960, width 290) — items spread vertically -->
       <div class="phase-col prod" style="left: 670px; width: 290px;">
         <div class="bg"></div>
-        <div class="col-label"><div class="num">4</div>Produit<span class="cnt">· 18</span></div>
+        <div class="col-label">
+          <div class="line-1"><div class="num">4</div>Produit<span class="cnt">· 18</span></div>
+          <div class="line-2"><b>24 888</b> WCB · <span class="conv">11,1%</span></div>
+        </div>
       </div>
 
       <!-- sub-col A (680): Complet manu (above) + Complet auto (below) -->
@@ -411,7 +446,10 @@
       <!-- PHASE 5: CHECKOUT (x: 980-1210, width 230) -->
       <div class="phase-col chk" style="left: 980px; width: 230px;">
         <div class="bg"></div>
-        <div class="col-label"><div class="num">5</div>Checkout<span class="cnt">· 14</span></div>
+        <div class="col-label">
+          <div class="line-1"><div class="num">5</div>Checkout<span class="cnt">· 14</span></div>
+          <div class="line-2"><b>2 096</b> WCB · <span class="conv">12,7%</span></div>
+        </div>
       </div>
 
       <!-- sub-col A (990): Complet manu (above) + Complet auto (below) -->
@@ -446,7 +484,7 @@
 
     </div>
     <div class="map-foot">
-      <span><b>~50 touchpoints sales</b> · <b>5 phases</b></span>
+      <span><b>~50 touchpoints sales</b> · <b>5 phases</b> · <i>conv. = achats assistés / WCB planifiés</i></span>
       <span>
         <span style="color:var(--site)">●</span> Site
         &nbsp;<span style="color:var(--acq)">●</span> Transverses
